@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="Stats" load_steps=2 format=3 uid="uid://bn0jj43cg8pvl"]
-
-[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://stats/stats.gd" id="1_a32ug"]
-
-[resource]
-resource_local_to_scene = true
-script = ExtResource("1_a32ug")
-faction = 1
-metadata/_custom_type_script = "uid://bri7cbbtioqux"

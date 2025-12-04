@@ -1,0 +1,58 @@
+[gd_scene load_steps=13 format=3 uid="uid://dvv1rfwbutpnd"]
+
+[ext_resource type="Shader" uid="uid://bp84pwkqga2os" path="res://shaders/tree_shake.gdshader" id="1_k1qr8"]
+[ext_resource type="Texture2D" uid="uid://c8lw4re7fg3jg" path="res://assets/TilesetNature.png" id="2_jpst2"]
+[ext_resource type="Script" uid="uid://booaup2jpos4d" path="res://entities/world_objects/tree/tree.gd" id="3_76vfx"]
+[ext_resource type="Resource" uid="uid://loo57jjysbb4" path="res://scenes/objects/treestats.tres" id="4_voydy"]
+[ext_resource type="Resource" uid="uid://cluhvv3vdor7a" path="res://systems/inventory/Loot/treeloot.tres" id="5_2ffna"]
+[ext_resource type="PackedScene" uid="uid://buso4u1xdj8j6" path="res://components/collectable/collectable_component.tscn" id="6_qsssg"]
+[ext_resource type="PackedScene" uid="uid://bimr5q38c28cp" path="res://systems/combat/damage/damage_component.tscn" id="7_xaen2"]
+[ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://components/hurt/hurt_component.tscn" id="8_d2ln1"]
+[ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="9_rd165"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mbbxw"]
+shader = ExtResource("1_k1qr8")
+shader_parameter/shake_intensity = 0.0
+shader_parameter/shake_speed = 20.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnvrw"]
+size = Vector2(24, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vfq2i"]
+size = Vector2(26, 9)
+
+[node name="Tree" type="Sprite2D"]
+y_sort_enabled = true
+material = SubResource("ShaderMaterial_mbbxw")
+position = Vector2(0, 11)
+texture = ExtResource("2_jpst2")
+offset = Vector2(0, -11)
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
+script = ExtResource("3_76vfx")
+harvest_stats = ExtResource("4_voydy")
+loot_table = ExtResource("5_2ffna")
+drop_collectable_scene = ExtResource("6_qsssg")
+required_tool = 2
+
+[node name="Sprite2D" type="StaticBody2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D"]
+shape = SubResource("RectangleShape2D_nnvrw")
+debug_color = Color(0.9999997, 0.01477797, 0.032877155, 0.41960785)
+
+[node name="DamageComponent" parent="." instance=ExtResource("7_xaen2")]
+y_sort_enabled = true
+
+[node name="Hurtbox" parent="." instance=ExtResource("8_d2ln1")]
+modulate = Color(0.9124393, 0, 0.9124393, 1)
+position = Vector2(0, 2)
+collision_layer = 17
+script = ExtResource("9_rd165")
+owner_stats = null
+
+[node name="HurtComponentCollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -1.5)
+shape = SubResource("RectangleShape2D_vfq2i")

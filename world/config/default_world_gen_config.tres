@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="WorldGenConfig" load_steps=7 format=3 uid="uid://ddm8w714kxx14"]
 
-[ext_resource type="PackedScene" uid="uid://dvv1rfwbutpnd" path="res://world/interactables/tree/tree.tscn" id="1_olv34"]
+[ext_resource type="PackedScene" uid="uid://dvv1rfwbutpnd" path="res://entities/world_objects/tree/tree.tscn" id="1_olv34"]
 [ext_resource type="PackedScene" uid="uid://cjjeshsgu638w" path="res://scenes/objects/blue_tree.tscn" id="2_ojjp7"]
 [ext_resource type="PackedScene" uid="uid://uqt4bn46ubfs" path="res://scenes/objects/cactus.tscn" id="3_a7wi5"]
 [ext_resource type="PackedScene" uid="uid://bkl0ht6hcv6vx" path="res://scenes/objects/rock_a.tscn" id="4_11ghl"]

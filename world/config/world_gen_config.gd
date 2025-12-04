@@ -95,7 +95,7 @@ extends Resource
 
 
 @export var object_tiles: Dictionary = {
-	"tree": preload("res://world/interactables/tree/tree.tscn"),
+	"tree": preload("res://entities/world_objects/tree/tree.tscn"),
 	"blue_tree": preload("res://scenes/objects/blue_tree.tscn"),
 	"cactus": preload("res://scenes/objects/cactus.tscn"),
 	"rock_a": preload("res://scenes/objects/rock_a.tscn"),

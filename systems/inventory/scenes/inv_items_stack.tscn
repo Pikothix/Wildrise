@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://biypwi7kbbw8x"]
+
+[ext_resource type="FontFile" uid="uid://cc1c1kpm0jtb4" path="res://systems/inventory/fonts/zx_palm.ttf" id="1_iglxs"]
+[ext_resource type="Script" uid="uid://bjea28tfugflv" path="res://systems/inventory/scripts/inv_items_stack.gd" id="1_l2kpq"]
+
+[node name="Panel" type="Panel"]
+script = ExtResource("1_l2kpq")
+
+[node name="item" type="Sprite2D" parent="."]
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(11, 14)
+layout_mode = 0
+offset_left = -7.0
+offset_right = 11.0
+offset_bottom = 14.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_iglxs")
+theme_override_font_sizes/font_size = 8
+text = "99"
+horizontal_alignment = 2

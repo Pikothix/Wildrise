@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="Skill" load_steps=2 format=3 uid="uid://qi75vpwgcorh"]
-
-[ext_resource type="Script" uid="uid://oq8i86lreywa" path="res://stats/skills/skill.gd" id="2_q7l4d"]
-
-[resource]
-script = ExtResource("2_q7l4d")
-skill_name = &"woodcutting"
-metadata/_custom_type_script = "uid://oq8i86lreywa"
