@@ -229,7 +229,7 @@ script = ExtResource("7_5548j")
 character = NodePath("../..")
 animated_sprite_2d = NodePath("../../AnimatedSprite2D")
 min_speed = 5.0
-max_speed = 20.0
+max_speed = 10.0
 
 [node name="Death" type="Node" parent="StateMachine"]
 script = ExtResource("8_licyd")

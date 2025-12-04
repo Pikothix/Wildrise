@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c8lw4re7fg3jg" path="res://assets/TilesetNature.png" id="2_jpst2"]
 [ext_resource type="Script" uid="uid://booaup2jpos4d" path="res://entities/world_objects/tree/tree.gd" id="3_76vfx"]
 [ext_resource type="Resource" uid="uid://loo57jjysbb4" path="res://scenes/objects/treestats.tres" id="4_voydy"]
-[ext_resource type="Resource" uid="uid://cluhvv3vdor7a" path="res://systems/inventory/Loot/treeloot.tres" id="5_2ffna"]
+[ext_resource type="Resource" uid="uid://cluhvv3vdor7a" path="res://systems/Loot/tree_loot.tres" id="5_2ffna"]
 [ext_resource type="PackedScene" uid="uid://buso4u1xdj8j6" path="res://components/collectable/collectable_component.tscn" id="6_qsssg"]
 [ext_resource type="PackedScene" uid="uid://bimr5q38c28cp" path="res://systems/combat/damage/damage_component.tscn" id="7_xaen2"]
 [ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://components/hurt/hurt_component.tscn" id="8_d2ln1"]

@@ -3,7 +3,7 @@ class_name WorldGenBase
 
 var biome_counts: Dictionary = {}
 
-@export var npc_spawn_config: NpcSpawnConfig
+@export var npc_spawn_data: Array[NpcSpawnData] = []
 @onready var NpcRoot: Node2D = $NpcRoot
 
 var npc_counts_by_chunk: Dictionary = {}
@@ -232,58 +232,54 @@ func _get_rng_for_tile(pos: Vector2i, biome: String) -> RandomNumberGenerator:
 	
 	
 func _spawn_npcs_for_tile(tile_pos: Vector2i, biome: String, h: float, t: float, m: float) -> void:
-	if npc_spawn_config == null:
-		return
-
-	var defs := npc_spawn_config.npc_definitions
-	if defs.is_empty():
+	# Using typed NpcSpawnData resources instead of dictionary config
+	if npc_spawn_data.is_empty():
 		return
 
 	var chunk_coord := tile_to_chunk(tile_pos)
 	var rng := _get_rng_for_tile(tile_pos, biome)
 
-	for def_dict in defs:
-		var allowed_biomes: Array = def_dict.get("allowed_biomes", [])
-		if not biome in allowed_biomes:
+	for def in npc_spawn_data:
+		if def == null:
 			continue
 
-		var min_h: float = def_dict.get("min_height", 0.0)
-		var max_h: float = def_dict.get("max_height", 1.0)
-		var min_t: float = def_dict.get("min_temp", 0.0)
-		var max_t: float = def_dict.get("max_temp", 1.0)
-		var min_m: float = def_dict.get("min_moisture", 0.0)
-		var max_m: float = def_dict.get("max_moisture", 1.0)
-
-		if h < min_h or h > max_h:
-			continue
-		if t < min_t or t > max_t:
-			continue
-		if m < min_m or m > max_m:
-			continue
-
-		var max_per_chunk: int = def_dict.get("max_per_chunk", 999)
-		var id: String = def_dict.get("id", "")
-		if id != "" and max_per_chunk < 999:
-			if _count_npcs_of_type_in_chunk(id, chunk_coord) >= max_per_chunk:
+		# Biome filter
+		if not def.allowed_biomes.is_empty():
+			# allowed_biomes is Array[StringName], biome is String
+			var biome_name: StringName = StringName(biome)
+			if not def.allowed_biomes.has(biome_name):
 				continue
 
-		var chance: float = def_dict.get("base_spawn_chance", 0.0)
-		if rng.randf() <= chance:
-			_spawn_npc_group(def_dict, tile_pos, chunk_coord, rng)
+		# Height / temp / moisture filters
+		if h < def.min_height or h > def.max_height:
+			continue
+		if t < def.min_temp or t > def.max_temp:
+			continue
+		if m < def.min_moisture or m > def.max_moisture:
+			continue
 
-func _spawn_npc_group(def_dict: Dictionary, center_tile_pos: Vector2i, center_chunk: Vector2i, rng: RandomNumberGenerator) -> void:
-	# Read group config (with safe defaults)
-	var group_min: int = def_dict.get("group_min", 1)
-	var group_max: int = def_dict.get("group_max", group_min)
-	var group_radius: int = def_dict.get("group_radius", 0)
+		# Per-chunk cap
+		var id_str: String = String(def.id)
+		if id_str != "" and def.max_per_chunk < 999:
+			if _count_npcs_of_type_in_chunk(id_str, chunk_coord) >= def.max_per_chunk:
+				continue
 
-	# Determine actual group size
+		# Spawn roll
+		if rng.randf() <= def.base_spawn_chance:
+			_spawn_npc_group_from_data(def, tile_pos, chunk_coord, rng)
+
+
+func _spawn_npc_group_from_data(def: NpcSpawnData, center_tile_pos: Vector2i, center_chunk: Vector2i, rng: RandomNumberGenerator) -> void:
+	var group_min: int = int(max(def.group_min, 1))
+	var group_max: int = int(max(def.group_max, group_min))
+	var group_radius: int = int(max(def.group_radius, 0))
+
 	var group_size: int = group_min
 	if group_max > group_min:
 		group_size = rng.randi_range(group_min, group_max)
 
-	var npc_id: String = def_dict.get("id", "")
-	var max_per_chunk: int = def_dict.get("max_per_chunk", 999)
+	var npc_id: String = String(def.id)
+	var max_per_chunk: int = def.max_per_chunk
 
 	for i in range(group_size):
 		# Respect max_per_chunk per chunk
@@ -295,39 +291,33 @@ func _spawn_npc_group(def_dict: Dictionary, center_tile_pos: Vector2i, center_ch
 
 		# Offset around the center tile to form a loose flock
 		if group_radius > 0:
-			var offset := Vector2i(
+			var offset: Vector2i = Vector2i(
 				rng.randi_range(-group_radius, group_radius),
 				rng.randi_range(-group_radius, group_radius)
 			)
 			spawn_tile += offset
 
-		# If the flock spills over a chunk boundary, tag with the correct chunk
 		var spawn_chunk: Vector2i = tile_to_chunk(spawn_tile)
+		_spawn_single_npc_from_data(def, spawn_tile, spawn_chunk)
 
-		_spawn_single_npc(def_dict, spawn_tile, spawn_chunk)
 
-
-func _spawn_single_npc(def_dict: Dictionary, tile_pos: Vector2i, chunk_coord: Vector2i) -> void:
-	var scene: PackedScene = def_dict.get("scene", null)
-	if scene == null:
+func _spawn_single_npc_from_data(def: NpcSpawnData, tile_pos: Vector2i, chunk_coord: Vector2i) -> void:
+	if def.npc_scene == null:
 		return
 
-	var npc := scene.instantiate()
+	var npc := def.npc_scene.instantiate()
 
 	var local_pos := GroundLayer.map_to_local(tile_pos)
 	var world_pos := GroundLayer.to_global(local_pos)
 	npc.global_position = world_pos
 
-	# Metadata
-	var npc_id: String = def_dict.get("id", "")
+	var npc_id := String(def.id)
 
 	npc.set_meta("chunk_coord", chunk_coord)
 	npc.set_meta("npc_id", npc_id)
 
-	# Add to scene
 	NpcRoot.add_child(npc)
 
-	# NEW: update our tracking dictionary
 	if not npc_counts_by_chunk.has(chunk_coord):
 		npc_counts_by_chunk[chunk_coord] = {}
 

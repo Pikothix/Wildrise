@@ -1,11 +1,9 @@
-[gd_scene load_steps=31 format=3 uid="uid://cqmremeii3qdb"]
+[gd_scene load_steps=24 format=3 uid="uid://cqmremeii3qdb"]
 
 [ext_resource type="Script" uid="uid://xjwjdskum2x5" path="res://world/generation/ChunkManager.gd" id="1_dqqhb"]
-[ext_resource type="PackedScene" uid="uid://b4ydblqspmj86" path="res://entities/npc/entity/lizard/lizard.tscn" id="2_b2suy"]
-[ext_resource type="PackedScene" uid="uid://7jumd521vesv" path="res://entities/npc/entity/squirrel/squirrel.tscn" id="3_h8lre"]
-[ext_resource type="PackedScene" uid="uid://diysxvn1a62l2" path="res://entities/npc/entity/cobra/cobra.tscn" id="4_ysn08"]
-[ext_resource type="PackedScene" uid="uid://bfb8hoqw1uj78" path="res://entities/npc/entity/crab/crab.tscn" id="5_m0cxt"]
-[ext_resource type="Script" uid="uid://c5an74a255su2" path="res://entities/npc/config/NpcSpawnConfig.gd" id="6_j34ew"]
+[ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="2_ov2xu"]
+[ext_resource type="Resource" uid="uid://cqutv2muiweyr" path="res://entities/npc/entity/cobra/cobra_spawn.tres" id="3_mad0u"]
+[ext_resource type="Resource" uid="uid://cvsrpwrc70eat" path="res://entities/npc/entity/lizard/bat_spawn.tres" id="4_mad0u"]
 [ext_resource type="Resource" uid="uid://ddm8w714kxx14" path="res://world/config/default_world_gen_config.tres" id="7_p2iis"]
 [ext_resource type="TileSet" uid="uid://c3jsf0hdthpan" path="res://assets/tile.tres" id="8_aysyn"]
 [ext_resource type="Shader" uid="uid://clvg57si7cmwx" path="res://shaders/water.gdshader" id="9_o1net"]
@@ -14,10 +12,6 @@
 [ext_resource type="Script" uid="uid://dyaux0urnehs2" path="res://scripts/hud/hud.gd" id="12_0pnie"]
 [ext_resource type="PackedScene" uid="uid://c5wra7g07oy5d" path="res://systems/inventory/scenes/inv_gui.tscn" id="13_llyeo"]
 [ext_resource type="PackedScene" uid="uid://bjovrhqha8bxh" path="res://systems/inventory/scenes/inv_hotbar.tscn" id="14_2tavo"]
-
-[sub_resource type="Resource" id="Resource_xo05s"]
-script = ExtResource("6_j34ew")
-metadata/_custom_type_script = "uid://c5an74a255su2"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_oo54l"]
 
@@ -41,44 +35,11 @@ noise = SubResource("FastNoiseLite_0nbtd")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i7141"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_4mrxx"]
-noise_type = 2
-frequency = 0.0159
-fractal_type = 3
-fractal_octaves = 1
-fractal_ping_pong_strength = 0.65
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7r4gi"]
-noise = SubResource("FastNoiseLite_4mrxx")
-seamless = true
-as_normal_map = true
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_w7kh3"]
-noise_type = 2
-frequency = 0.0085
-fractal_type = 3
-fractal_octaves = 1
-fractal_ping_pong_strength = 0.545
-cellular_jitter = 1.595
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_e3hyu"]
-noise = SubResource("FastNoiseLite_w7kh3")
-seamless = true
-seamless_blend_skirt = 1.0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w7kh3"]
+render_priority = 0
 shader = ExtResource("9_o1net")
-shader_parameter/distortion_noise = SubResource("NoiseTexture2D_7r4gi")
-shader_parameter/fractals = SubResource("NoiseTexture2D_e3hyu")
-shader_parameter/direction = Vector2(0.3, 1.425)
-shader_parameter/water_color = Color(0, 0.4509804, 1, 1)
-shader_parameter/fractal_color = Color(1, 1, 1, 1)
-shader_parameter/scale = 152.0
-shader_parameter/opacity = 0.65000000968578
-shader_parameter/distortion_strength = 1.0
-shader_parameter/fractal_strength = 0.7500000111759
 
-[sub_resource type="Resource" id="Resource_dqqhb"]
+[sub_resource type="Resource" id="Resource_ocfjn"]
 resource_local_to_scene = true
 script = ExtResource("11_gi7ib")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
@@ -86,7 +47,7 @@ metadata/_custom_type_script = "uid://bri7cbbtioqux"
 [node name="Main" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_dqqhb")
-npc_spawn_config = SubResource("Resource_xo05s")
+npc_spawn_data = Array[ExtResource("2_ov2xu")]([ExtResource("3_mad0u"), ExtResource("4_mad0u")])
 world_config = ExtResource("7_p2iis")
 player_path = NodePath("Player")
 chunk_size = 13
@@ -143,7 +104,7 @@ y_sort_enabled = true
 
 [node name="Player" parent="." node_paths=PackedStringArray("hotbar") instance=ExtResource("10_3ljsx")]
 hotbar = NodePath("../HUD/Hotbar")
-stats = SubResource("Resource_dqqhb")
+stats = SubResource("Resource_ocfjn")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory_gui", "player")]
 script = ExtResource("12_0pnie")

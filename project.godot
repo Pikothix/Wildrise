@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Wildrise v0.1"
+config/name="Wildrise v0.2"
 run/main_scene="res://world/world.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://assets/icon.svg"
@@ -18,7 +18,6 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 ToolManager="*res://scripts/globals/tool_manager.gd"
-InventoryManager="*res://scripts/globals/inventory_manager.gd"
 UseSystem="*res://z/ItemUseSystem/use_system.gd"
 InvGui="*res://systems/inventory/scripts/inv_gui.gd"
 TileLibrary="*res://world/tiles/tile_library.gd"

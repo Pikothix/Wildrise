@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="NpcSpawnData" load_steps=3 format=3 uid="uid://cvsrpwrc70eat"]
+
+[ext_resource type="PackedScene" uid="uid://cxdcrjqkltcg" path="res://entities/npc/entity/lizard/bat.tscn" id="1_8jmii"]
+[ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="2_cb36g"]
+
+[resource]
+script = ExtResource("2_cb36g")
+display_name = "Bat"
+npc_scene = ExtResource("1_8jmii")
+allowed_biomes = Array[StringName]([&"jungle", &"plains"])
+max_per_chunk = 16
+group_max = 3
+group_radius = 3
+metadata/_custom_type_script = "uid://853y8ovocegg"

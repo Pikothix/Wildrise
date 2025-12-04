@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="NpcSpawnData" load_steps=3 format=3 uid="uid://cqutv2muiweyr"]
+
+[ext_resource type="PackedScene" uid="uid://diysxvn1a62l2" path="res://entities/npc/entity/cobra/cobra.tscn" id="1_wi3tt"]
+[ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="1_xrry7"]
+
+[resource]
+script = ExtResource("1_xrry7")
+display_name = "Cobra"
+npc_scene = ExtResource("1_wi3tt")
+allowed_biomes = Array[StringName]([&"jungle", &"plains"])
+max_per_chunk = 16
+group_max = 2
+group_radius = 3
+metadata/_custom_type_script = "uid://853y8ovocegg"

@@ -1,4 +1,4 @@
-# res://worldgen/NpcSpawnData.gd
+# res://entities/npc/core/NpcSpawnData.gd
 extends Resource
 class_name NpcSpawnData
 
@@ -14,7 +14,12 @@ class_name NpcSpawnData
 @export var base_spawn_chance: float = 0.01        # per tile
 @export var max_per_chunk: int = 999               # optional cap
 
-# Optional extra knobs:
+@export_category("Flocking")
+@export var group_min: int = 1
+@export var group_max: int = 1
+@export var group_radius: int = 0                  # tiles around anchor
+
+@export_category("Environment Filters")
 @export var min_height: float = 0.0  # 0–1 noise range
 @export var max_height: float = 1.0
 @export var min_temp: float = 0.0

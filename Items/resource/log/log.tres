@@ -1,10 +1,11 @@
 [gd_resource type="Resource" script_class="InventoryItem" load_steps=4 format=3 uid="uid://dwhkklo4c7mxd"]
 
 [ext_resource type="Script" uid="uid://dqg63q63ll8cq" path="res://systems/inventory/scripts/Inv_Item.gd" id="1_2sbca"]
-[ext_resource type="Texture2D" uid="uid://dnxst3jqck1pt" path="res://Items/resource/log/Branch.png" id="2_jtboc"]
+[ext_resource type="Texture2D" uid="uid://bvm3elyunpaa5" path="res://assets/Lizard.png" id="2_vsh46"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jtboc"]
-atlas = ExtResource("2_jtboc")
+atlas = ExtResource("2_vsh46")
+region = Rect2(0, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_2sbca")
