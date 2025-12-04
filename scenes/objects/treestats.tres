@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="HarvestStats" load_steps=2 format=3 uid="uid://loo57jjysbb4"]
+
+[ext_resource type="Script" uid="uid://dugkkce4k7uoc" path="res://stats/harvest_stats.gd" id="1_adhsv"]
+
+[resource]
+script = ExtResource("1_adhsv")
+max_health = 20.0
+hardness = 3
+skill_reward_name = &"woodcutting"
+skill_reward_xp = 100.0
+metadata/_custom_type_script = "uid://dugkkce4k7uoc"

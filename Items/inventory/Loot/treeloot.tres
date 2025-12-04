@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LootTable" load_steps=4 format=3 uid="uid://cluhvv3vdor7a"]
+
+[ext_resource type="Script" uid="uid://cjh8q4f4lgspi" path="res://Items/inventory/Loot/LootEntry.gd" id="1_il8pm"]
+[ext_resource type="Resource" uid="uid://bte3usu865cd1" path="res://Items/inventory/Loot/tree_log_entry.tres" id="2_rjiym"]
+[ext_resource type="Script" uid="uid://biylywek4nbta" path="res://Items/inventory/Loot/LootTable.gd" id="2_unesc"]
+
+[resource]
+script = ExtResource("2_unesc")
+entries = Array[ExtResource("1_il8pm")]([ExtResource("2_rjiym")])
+metadata/_custom_type_script = "uid://biylywek4nbta"

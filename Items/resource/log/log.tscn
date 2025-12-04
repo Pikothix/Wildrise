@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://2dmkx88bmgjt"]
+
+[ext_resource type="Script" uid="uid://csxi5x4o2i1u1" path="res://components/collectable/collectable_component.gd" id="1_2fihl"]
+[ext_resource type="Resource" uid="uid://dwhkklo4c7mxd" path="res://Items/resource/log/log.tres" id="2_4f8tk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_liehn"]
+
+[node name="Log" type="Area2D"]
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("1_2fihl")
+item_resource = ExtResource("2_4f8tk")
+collectable_name = "log"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_liehn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

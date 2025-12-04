@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://uqt4bn46ubfs"]
+
+[ext_resource type="Texture2D" uid="uid://cda64eyjhcgy8" path="res://assets/solid/Tiles.png" id="1_mvi3i"]
+[ext_resource type="Script" uid="uid://booaup2jpos4d" path="res://world/interactables/tree/tree.gd" id="2_776tf"]
+[ext_resource type="PackedScene" uid="uid://bimr5q38c28cp" path="res://combat/damage/damage_component.tscn" id="3_gc757"]
+[ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://components/hurt/hurt_component.tscn" id="4_thxuu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnvrw"]
+size = Vector2(6, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vfq2i"]
+size = Vector2(15, 31)
+
+[node name="Cactus" type="Sprite2D"]
+y_sort_enabled = true
+position = Vector2(0, 11)
+texture = ExtResource("1_mvi3i")
+offset = Vector2(0, -11)
+region_enabled = true
+region_rect = Rect2(80, 80, 16, 16)
+script = ExtResource("2_776tf")
+
+[node name="Sprite2D" type="StaticBody2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D"]
+shape = SubResource("RectangleShape2D_nnvrw")
+debug_color = Color(0.9999997, 0.01477797, 0.032877155, 0.41960785)
+
+[node name="DamageComponent" parent="." instance=ExtResource("3_gc757")]
+y_sort_enabled = true
+max_damage = 3
+
+[node name="HurtComponent" parent="." instance=ExtResource("4_thxuu")]
+modulate = Color(0.9124393, 0, 0.9124393, 1)
+position = Vector2(0, 2)
+
+[node name="HurtComponentCollisionShape2D" type="CollisionShape2D" parent="HurtComponent"]
+position = Vector2(0.5, -12.5)
+shape = SubResource("RectangleShape2D_vfq2i")

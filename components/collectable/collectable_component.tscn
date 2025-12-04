@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://buso4u1xdj8j6"]
+
+[ext_resource type="Script" uid="uid://csxi5x4o2i1u1" path="res://components/collectable/collectable_component.gd" id="1_ux6q3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f38sf"]
+
+[node name="CollectableComponent" type="Area2D"]
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("1_ux6q3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_f38sf")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

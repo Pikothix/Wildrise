@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://cjjeshsgu638w"]
+
+[ext_resource type="Texture2D" uid="uid://c8lw4re7fg3jg" path="res://assets/TilesetNature.png" id="1_7f46h"]
+[ext_resource type="Script" uid="uid://booaup2jpos4d" path="res://world/interactables/tree/tree.gd" id="2_1vrqq"]
+[ext_resource type="PackedScene" uid="uid://bimr5q38c28cp" path="res://combat/damage/damage_component.tscn" id="3_ktscq"]
+[ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://components/hurt/hurt_component.tscn" id="4_7f46h"]
+[ext_resource type="Script" uid="uid://dsjv0d0flxs6d" path="res://z/hit/healthbar.gd" id="5_1vrqq"]
+[ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://combat/hurtboxes/hurtbox.gd" id="6_7f46h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnvrw"]
+size = Vector2(6, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vfq2i"]
+size = Vector2(15, 31)
+
+[node name="BlueTree" type="Sprite2D"]
+y_sort_enabled = true
+position = Vector2(0, 14)
+texture = ExtResource("1_7f46h")
+offset = Vector2(0, -14)
+region_enabled = true
+region_rect = Rect2(32, 0, 32, 32)
+script = ExtResource("2_1vrqq")
+
+[node name="Sprite2D" type="StaticBody2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D"]
+visible = false
+shape = SubResource("RectangleShape2D_nnvrw")
+debug_color = Color(0.9999997, 0.01477797, 0.032877155, 0.41960785)
+
+[node name="DamageComponent" parent="." instance=ExtResource("3_ktscq")]
+visible = false
+y_sort_enabled = true
+position = Vector2(0, 2)
+
+[node name="HurtComponent" parent="." instance=ExtResource("4_7f46h")]
+visible = false
+modulate = Color(0.9124393, 0, 0.9124393, 1)
+position = Vector2(0, 2)
+
+[node name="HurtComponentCollisionShape2D" type="CollisionShape2D" parent="HurtComponent"]
+visible = false
+position = Vector2(0.5, -12.5)
+shape = SubResource("RectangleShape2D_vfq2i")
+
+[node name="HurtComponent2" parent="." instance=ExtResource("4_7f46h")]
+visible = false
+modulate = Color(0.9124393, 0, 0.9124393, 1)
+position = Vector2(0, 2)
+script = ExtResource("6_7f46h")
+owner_stats = null
+
+[node name="HurtComponentCollisionShape2D" type="CollisionShape2D" parent="HurtComponent2"]
+visible = false
+position = Vector2(0.5, -12.5)
+shape = SubResource("RectangleShape2D_vfq2i")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_left = 9.0
+offset_top = -23.0
+offset_right = 93.0
+offset_bottom = 4.0
+script = ExtResource("5_1vrqq")

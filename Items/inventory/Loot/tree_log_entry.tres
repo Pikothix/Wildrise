@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LootEntry" load_steps=3 format=3 uid="uid://bte3usu865cd1"]
+
+[ext_resource type="Resource" uid="uid://dwhkklo4c7mxd" path="res://Items/resource/log/log.tres" id="1_lrcyk"]
+[ext_resource type="Script" uid="uid://cjh8q4f4lgspi" path="res://Items/inventory/Loot/LootEntry.gd" id="2_c8cgl"]
+
+[resource]
+script = ExtResource("2_c8cgl")
+item = ExtResource("1_lrcyk")
+max_amount = 3
+metadata/_custom_type_script = "uid://cjh8q4f4lgspi"

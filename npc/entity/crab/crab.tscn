@@ -1,0 +1,126 @@
+[gd_scene load_steps=19 format=3 uid="uid://bfb8hoqw1uj78"]
+
+[ext_resource type="Script" uid="uid://bn7wrbe2qdstu" path="res://npc/core/npc.gd" id="1_fc7lg"]
+[ext_resource type="Resource" uid="uid://dwl1pg7psntay" path="res://npc/entity/crab/crab.tres" id="2_10w2q"]
+[ext_resource type="Texture2D" uid="uid://d4bvoa8sqfn2g" path="res://assets/zAnimals/Crab Sprite Sheet.png" id="3_a4k2f"]
+[ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="4_1nkbr"]
+[ext_resource type="Script" uid="uid://ba7yyj5254nkd" path="res://npc/states/idle_state.gd" id="5_qj3wm"]
+[ext_resource type="Script" uid="uid://c64iclllgncxk" path="res://npc/states/walk_state.gd" id="6_ta1ck"]
+[ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://combat/hurtboxes/hurtbox.gd" id="7_ewohj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjvcj"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7se4"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ceoj5"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s560g"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2axko"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2vorc"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2odu1"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_unm5m"]
+atlas = ExtResource("3_a4k2f")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2a2as"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_yjvcj")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_u7se4")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_ceoj5")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_s560g")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_2axko")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_2vorc")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_2odu1")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_unm5m")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tv558"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2axko"]
+radius = 19.104973
+
+[node name="crab" type="CharacterBody2D"]
+z_index = 1
+script = ExtResource("1_fc7lg")
+stats = ExtResource("2_10w2q")
+max_walk_cycle = 4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -11)
+sprite_frames = SubResource("SpriteFrames_2a2as")
+animation = &"idle"
+autoplay = "idle"
+speed_scale = 0.47
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_tv558")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_node_state")]
+script = ExtResource("4_1nkbr")
+initial_node_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("character", "animated_sprite_2d")]
+script = ExtResource("5_qj3wm")
+character = NodePath("../..")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Walk" type="Node" parent="StateMachine" node_paths=PackedStringArray("character", "animated_sprite_2d")]
+script = ExtResource("6_ta1ck")
+character = NodePath("../..")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+max_speed = 2.0
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_mask = 3
+script = ExtResource("7_ewohj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_2axko")
