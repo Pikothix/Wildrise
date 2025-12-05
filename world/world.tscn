@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cqmremeii3qdb"]
+[gd_scene load_steps=22 format=3 uid="uid://cqmremeii3qdb"]
 
 [ext_resource type="Script" uid="uid://xjwjdskum2x5" path="res://world/generation/ChunkManager.gd" id="1_dqqhb"]
 [ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="2_ov2xu"]
@@ -6,7 +6,6 @@
 [ext_resource type="Resource" uid="uid://cvsrpwrc70eat" path="res://entities/npc/entity/lizard/bat_spawn.tres" id="4_mad0u"]
 [ext_resource type="Resource" uid="uid://ddm8w714kxx14" path="res://world/config/default_world_gen_config.tres" id="7_p2iis"]
 [ext_resource type="TileSet" uid="uid://c3jsf0hdthpan" path="res://assets/tile.tres" id="8_aysyn"]
-[ext_resource type="Shader" uid="uid://clvg57si7cmwx" path="res://shaders/water.gdshader" id="9_o1net"]
 [ext_resource type="PackedScene" uid="uid://bkfqm4yqkvtah" path="res://entities/player/player.tscn" id="10_3ljsx"]
 [ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="11_gi7ib"]
 [ext_resource type="Script" uid="uid://dyaux0urnehs2" path="res://scripts/hud/hud.gd" id="12_0pnie"]
@@ -35,11 +34,7 @@ noise = SubResource("FastNoiseLite_0nbtd")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i7141"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_w7kh3"]
-render_priority = 0
-shader = ExtResource("9_o1net")
-
-[sub_resource type="Resource" id="Resource_ocfjn"]
+[sub_resource type="Resource" id="Resource_ov2xu"]
 resource_local_to_scene = true
 script = ExtResource("11_gi7ib")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
@@ -78,7 +73,7 @@ tile_set = ExtResource("8_aysyn")
 [node name="WaterLayer" type="TileMapLayer" parent="."]
 visibility_layer = 2
 z_as_relative = false
-material = SubResource("ShaderMaterial_w7kh3")
+use_parent_material = true
 tile_set = ExtResource("8_aysyn")
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
@@ -104,7 +99,7 @@ y_sort_enabled = true
 
 [node name="Player" parent="." node_paths=PackedStringArray("hotbar") instance=ExtResource("10_3ljsx")]
 hotbar = NodePath("../HUD/Hotbar")
-stats = SubResource("Resource_ocfjn")
+stats = SubResource("Resource_ov2xu")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory_gui", "player")]
 script = ExtResource("12_0pnie")

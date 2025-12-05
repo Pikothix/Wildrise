@@ -282,23 +282,51 @@ func _spawn_npc_group_from_data(def: NpcSpawnData, center_tile_pos: Vector2i, ce
 	var max_per_chunk: int = def.max_per_chunk
 
 	for i in range(group_size):
-		# Respect max_per_chunk per chunk
 		if npc_id != "" and max_per_chunk < 999:
 			if _count_npcs_of_type_in_chunk(npc_id, center_chunk) >= max_per_chunk:
 				break
 
 		var spawn_tile: Vector2i = center_tile_pos
 
-		# Offset around the center tile to form a loose flock
-		if group_radius > 0:
-			var offset: Vector2i = Vector2i(
-				rng.randi_range(-group_radius, group_radius),
-				rng.randi_range(-group_radius, group_radius)
-			)
-			spawn_tile += offset
+		match def.flock_shape:
+			NpcSpawnData.FlockShape.CLUMP:
+				if group_radius > 0:
+					var offset: Vector2i = Vector2i(
+						rng.randi_range(-group_radius, group_radius),
+						rng.randi_range(-group_radius, group_radius)
+					)
+					spawn_tile += offset
+
+			NpcSpawnData.FlockShape.LINE:
+				var dir := rng.randi_range(0, 3) # 0–3 for 4 cardinal directions
+				var step := int(def.spacing)
+
+				var line_offset: Vector2i
+				match dir:
+					0:
+						line_offset = Vector2i(i * step, 0)
+					1:
+						line_offset = Vector2i(-i * step, 0)
+					2:
+						line_offset = Vector2i(0, i * step)
+					_:
+						line_offset = Vector2i(0, -i * step)
+
+				spawn_tile += line_offset
+
+			NpcSpawnData.FlockShape.CIRCLE:
+				var angle := TAU * float(i) / float(max(group_size, 1))
+				var radius: int = max(group_radius, 1)
+				var circle_offset := Vector2i(
+					int(round(cos(angle) * radius)),
+					int(round(sin(angle) * radius))
+				)
+				spawn_tile += circle_offset
 
 		var spawn_chunk: Vector2i = tile_to_chunk(spawn_tile)
 		_spawn_single_npc_from_data(def, spawn_tile, spawn_chunk)
+
+
 
 
 func _spawn_single_npc_from_data(def: NpcSpawnData, tile_pos: Vector2i, chunk_coord: Vector2i) -> void:

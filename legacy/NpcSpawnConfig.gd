@@ -1,4 +1,3 @@
-## res://worldgen/NpcSpawnConfig.gd
 #extends Resource
 #class_name NpcSpawnConfig
 #

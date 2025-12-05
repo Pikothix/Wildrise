@@ -18,7 +18,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 ToolManager="*res://scripts/globals/tool_manager.gd"
-UseSystem="*res://z/ItemUseSystem/use_system.gd"
+UseSystem="*res://experimental/ItemUseSystem/use_system.gd"
 InvGui="*res://systems/inventory/scripts/inv_gui.gd"
 TileLibrary="*res://world/tiles/tile_library.gd"
 

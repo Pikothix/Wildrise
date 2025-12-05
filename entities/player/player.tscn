@@ -313,7 +313,7 @@ z_as_relative = false
 material = SubResource("ShaderMaterial_g6k8r")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2.8, 2.8)
+zoom = Vector2(2.51, 2.51)
 limit_smoothed = true
 script = ExtResource("5_f1ej7")
 

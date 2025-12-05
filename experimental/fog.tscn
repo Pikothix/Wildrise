@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3rluc1fijbgh"]
 
-[ext_resource type="Shader" uid="uid://i1ssrpy8qsno" path="res://z/fog.gdshader" id="1_n38x1"]
+[ext_resource type="Shader" uid="uid://i1ssrpy8qsno" path="res://experimental/fog.gdshader" id="1_n38x1"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_1h47f"]
 frequency = 0.0075
