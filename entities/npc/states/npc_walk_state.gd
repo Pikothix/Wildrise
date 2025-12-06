@@ -11,7 +11,7 @@ var radius := 256.0  # how far they wander
 @export var max_speed: float = 100.0
 
 var speed: float
-
+var _active: bool = false
 
 func _ready() -> void:
 	navigation_agent_2d.velocity_computed.connect(on_safe_velocity_computed)
@@ -52,6 +52,8 @@ func _on_process(_delta : float) -> void:
 
 
 func _on_physics_process(_delta : float) -> void:
+	if !_active:
+		return
 	if character.is_dead:
 		return
 
@@ -65,17 +67,20 @@ func _on_physics_process(_delta : float) -> void:
 	var velocity: Vector2 = target_direction * speed
 	
 	if navigation_agent_2d.avoidance_enabled:
-		animated_sprite_2d.flip_h = velocity.x < 0
+		character.update_facing_from_vector(velocity)
 		navigation_agent_2d.velocity = velocity
 	else:
 		character.velocity = velocity
 		character.move_and_slide()
 
+
 func on_safe_velocity_computed(safe_velocity: Vector2) -> void:
+	if !_active:
+		return
 	if character.is_dead:
 		return
 
-	animated_sprite_2d.flip_h = safe_velocity.x < 0
+	character.update_facing_from_vector(safe_velocity)
 	character.velocity = safe_velocity
 	character.move_and_slide()
 
@@ -84,12 +89,13 @@ func _on_next_transitions() -> void:
 		character.velocity = Vector2.ZERO
 		transition.emit("Idle")
 
-
 func _on_enter() -> void:
+	_active = true
 	animated_sprite_2d.play("walk")
 	character.current_walk_cycle = 0
 	set_movement_target()
 
 
 func _on_exit() -> void:
+	_active = false
 	animated_sprite_2d.stop()

@@ -1,6 +1,7 @@
 extends Area2D
 class_name Hurtbox
 
+
 @export var owner_stats: Stats
 
 signal hit_received(damage: int, from: Area2D)
@@ -16,9 +17,11 @@ func _ready() -> void:
 	collision_mask = 0
 
 func receive_hit(damage: int, from: Area2D) -> void:
-	# Let the owner (tree, NPC, etc.) hook in custom logic
 	hit_received.emit(damage, from)
 
-	# Default behaviour: if we have Stats, forward the damage there
 	if owner_stats:
+		print("HURTBOX for", owner_stats, "taking", damage, "damage. HP before:", owner_stats.current_health)
 		owner_stats.take_damage(damage)
+		print("HP after:", owner_stats.current_health)
+	else:
+		print("HURTBOX has NO owner_stats!")

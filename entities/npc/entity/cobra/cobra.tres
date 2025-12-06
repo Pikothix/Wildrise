@@ -6,5 +6,6 @@
 resource_local_to_scene = true
 script = ExtResource("1_7vmny")
 speed = 10.0
+base_attack = 25.11
 faction = 1
 metadata/_custom_type_script = "uid://bri7cbbtioqux"

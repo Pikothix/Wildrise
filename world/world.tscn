@@ -45,7 +45,7 @@ script = ExtResource("1_dqqhb")
 npc_spawn_data = Array[ExtResource("2_ov2xu")]([ExtResource("3_mad0u"), ExtResource("4_mad0u")])
 world_config = ExtResource("7_p2iis")
 player_path = NodePath("Player")
-chunk_size = 13
+chunk_size = 8
 height_noise_texture = SubResource("NoiseTexture2D_kpybi")
 temperature_noise_texture = SubResource("NoiseTexture2D_xgqkh")
 moisture_noise_texture = SubResource("NoiseTexture2D_ts3gi")
@@ -80,11 +80,7 @@ tile_set = ExtResource("8_aysyn")
 z_index = -1
 tile_set = ExtResource("8_aysyn")
 
-[node name="CliffLayer" type="TileMapLayer" parent="."]
-tile_set = ExtResource("8_aysyn")
-
 [node name="EnvLayer" type="TileMapLayer" parent="."]
-z_index = 1
 y_sort_enabled = true
 tile_set = ExtResource("8_aysyn")
 
@@ -96,6 +92,9 @@ y_sort_enabled = true
 y_sort_enabled = true
 
 [node name="NavRoot" type="Node2D" parent="."]
+
+[node name="CliffLayer" type="TileMapLayer" parent="."]
+tile_set = ExtResource("8_aysyn")
 
 [node name="Player" parent="." node_paths=PackedStringArray("hotbar") instance=ExtResource("10_3ljsx")]
 hotbar = NodePath("../HUD/Hotbar")

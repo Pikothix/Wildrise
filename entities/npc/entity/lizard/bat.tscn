@@ -5,9 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://bl41pxb15yw4c" path="res://assets/zAnimals/Bat_Sprite_Sheet.png" id="3_0qiks"]
 [ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="4_d5xae"]
 [ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="5_ehouu"]
-[ext_resource type="Script" uid="uid://ba7yyj5254nkd" path="res://entities/npc/states/idle_state.gd" id="6_rbel7"]
-[ext_resource type="Script" uid="uid://c64iclllgncxk" path="res://entities/npc/states/walk_state.gd" id="7_h1bj8"]
-[ext_resource type="Script" uid="uid://bj2ly2qaxykha" path="res://entities/npc/states/death_state.gd" id="8_7qhvo"]
+[ext_resource type="Script" uid="uid://ba7yyj5254nkd" path="res://entities/npc/states/npc_idle_state.gd" id="6_rbel7"]
+[ext_resource type="Script" uid="uid://c64iclllgncxk" path="res://entities/npc/states/npc_walk_state.gd" id="7_h1bj8"]
+[ext_resource type="Script" uid="uid://bj2ly2qaxykha" path="res://entities/npc/states/npc_death_state.gd" id="8_7qhvo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p0fwo"]
 atlas = ExtResource("3_0qiks")

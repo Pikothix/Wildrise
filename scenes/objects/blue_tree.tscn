@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c8lw4re7fg3jg" path="res://assets/TilesetNature.png" id="1_7f46h"]
 [ext_resource type="Script" uid="uid://booaup2jpos4d" path="res://entities/world_objects/tree/tree.gd" id="2_1vrqq"]
 [ext_resource type="PackedScene" uid="uid://bimr5q38c28cp" path="res://systems/combat/damage/damage_component.tscn" id="3_ktscq"]
-[ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://components/hurt/hurt_component.tscn" id="4_7f46h"]
+[ext_resource type="PackedScene" uid="uid://c307cg6mxg1ae" path="res://experimental/hurt/hurt_component.tscn" id="4_7f46h"]
 [ext_resource type="Script" uid="uid://dsjv0d0flxs6d" path="res://experimental/hit/healthbar.gd" id="5_1vrqq"]
 [ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="6_7f46h"]
 

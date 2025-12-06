@@ -1,5 +1,5 @@
 class_name NonPlayerCharacter
-extends Node
+extends CharacterBody2D
 
 @export var min_walk_cycle: int = 2
 @export var max_walk_cycle: int = 6

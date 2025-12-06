@@ -2,20 +2,16 @@ extends NodeState
 
 @export var player: Player
 @export var hit_comp_collision: CollisionShape2D
+@export var chop_duration: float = 0.30
 
 var _done := false
 
 func _ready() -> void:
-	hit_comp_collision.disabled = true
-	hit_comp_collision.position = Vector2(0,-7)
+	_done = false
 
 func _on_enter() -> void:
 	_done = false
-	hit_comp_collision.disabled = false
-
-	# You can optionally trigger an animation state here
-	# anim_tree["parameters/StateMachine/transition_request"] = "Chop"
-
+	
 	_chop_window()
 
 func _chop_window() -> void:
@@ -32,4 +28,4 @@ func _on_next_transitions() -> void:
 		transition.emit("Idle")
 
 func _on_exit() -> void:
-	hit_comp_collision.disabled = true
+	pass

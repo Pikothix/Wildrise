@@ -15,10 +15,16 @@ var last_move_dir: Vector2 = Vector2.DOWN
 @export var drop_collectable_scene: PackedScene
 
 
-@onready var hit_component: HitComponent = $HitComponent
 
 @export var stats: Stats
-@export var hitbox_shape: Shape2D
+
+
+@export var hitbox_scene: PackedScene
+
+@onready var hurtbox: Hurtbox = $HurtBox
+@onready var sprite: Sprite2D = $Sprite2D
+var _base_modulate: Color = Color.WHITE
+
 
 @export var speed: float = 50.0
 var input_vector = Vector2.ZERO
@@ -26,6 +32,11 @@ var input_vector = Vector2.ZERO
 @onready var anim_tree: AnimationTree = $AnimationTree 
 
 @export var current_tool: DataTypes.Tools = DataTypes.Tools.None
+
+var equipped_damage: int = 1
+var equipped_tool: DataTypes.Tools = DataTypes.Tools.None
+var is_dead: bool = false
+
 
 
 func _input(event: InputEvent) -> void:
@@ -39,19 +50,26 @@ func _input(event: InputEvent) -> void:
 	# 🔹 Attack / Hitbox should ALWAYS work
 	# ---------------------------------------
 	if event.is_action_pressed("hit2"):
-		# Equip from current hotbar selection (allowed even if inventory is open)
 		_equip_from_hotbar_selection()
 
-		# Spawn hitbox (allowed even if inventory is open)
-		var hitbox: Hitbox = Hitbox.new(stats, 0.5, hitbox_shape)
-		hitbox.current_tool = current_tool
-		hitbox.hit_damage = hit_component.hit_damage
+		if hitbox_scene == null:
+			push_warning("Player has no hitbox_scene assigned")
+			return
 
-		# 🔹 THIS is the important line:
+		var hitbox: Hitbox = hitbox_scene.instantiate()
+		hitbox.attacker_stats = stats
+		hitbox.hitbox_lifetime = 0.5               # same as before
+		hitbox.current_tool = equipped_tool
+		hitbox.hit_damage = equipped_damage
+
 		hitbox.instigator = self
 
-		add_child(hitbox)
-		hitbox.global_position = global_position  # optional but usually what you want
+		# Position it – start simple: on top of the player
+		hitbox.global_position = global_position
+
+		# I prefer adding to the main scene, but you can keep it under the player if you want
+		get_tree().current_scene.add_child(hitbox)
+
 
 
 	# ---------------------------------------
@@ -62,6 +80,24 @@ func _input(event: InputEvent) -> void:
 
 
 func _ready() -> void:
+	if stats == null:
+		push_warning("Player has NO Stats resource assigned!")
+	else:
+		print("Player Stats resource:", stats)
+		
+	if sprite:
+		_base_modulate = sprite.modulate
+
+	print("Player _ready. stats =", stats, "hurtbox =", hurtbox)
+
+	if hurtbox:
+		hurtbox.owner_stats = stats
+		print("Player Hurtbox owner_stats after assign:", hurtbox.owner_stats)
+		hurtbox.hit_received.connect(_on_hit_received)
+
+	if stats:
+		stats.health_depleted.connect(_on_health_depleted)
+	
 	add_to_group("player")
 	ToolManager.tool_selected.connect(on_tool_selected)
 
@@ -73,6 +109,19 @@ func _ready() -> void:
 	else:
 		push_warning("Player: could not find InventoryGui to connect drop_requested")
 
+func _on_hit_received(damage: int, from: Area2D) -> void:
+	#print("Player took", damage, "damage from", from)  # debug
+	# Visual feedback: flash red
+	if sprite:
+		sprite.modulate = Color(1.0, 0.3, 0.3)
+		var tw := create_tween()
+		tw.tween_property(sprite, "modulate", _base_modulate, 0.1)
+
+	# Tiny knockback away from the attacker (optional)
+	if from is Node2D:
+		var attacker_pos := (from as Node2D).global_position
+		var dir := (global_position - attacker_pos).normalized()
+		velocity += dir * 40.0
 
 func _process(_delta: float) -> void:
 	_update_skill_debug_label()
@@ -94,23 +143,46 @@ func _update_skill_debug_label() -> void:
 
 
 
+func _on_health_depleted() -> void:
+	if is_dead:
+		return
+	is_dead = true
+
+	print("PLAYER DIED")  # debug
+
+	# Stop input / movement for now
+	set_physics_process(false)
+	set_process(false)
+
+	# Visual feedback – grey out
+	if sprite:
+		sprite.modulate = Color(0.5, 0.5, 0.5)
+
+
+
+
+
+
+##inventory##
+
 func on_tool_selected(tool: DataTypes.Tools) -> void:
 	current_tool = tool
-	hit_component.current_tool = tool
+	equipped_tool = tool
 	#print("Tool (from ToolManager):", tool)
-
 
 func update_current_tool_from_inventory_item(item: InventoryItem) -> void:
 	if item == null:
 		current_tool = DataTypes.Tools.None
-		hit_component.current_tool = DataTypes.Tools.None
-		hit_component.hit_damage = 0
+		equipped_tool = DataTypes.Tools.None
+		equipped_damage = 0
+
 		#print("Player: cleared tool")
 		return
 
 	current_tool = item.tool_type
-	hit_component.current_tool = item.tool_type
-	hit_component.hit_damage = max(1, item.chop_power)
+	equipped_tool = item.tool_type
+	equipped_damage = max(1, item.chop_power)
+
 	#print("Player: equipped item", item.name, 
 		#"tool =", current_tool, 
 		#"hit_damage =", hit_component.hit_damage)
@@ -119,8 +191,6 @@ func update_current_tool_from_inventory_item(item: InventoryItem) -> void:
 		#"tool_type =", item.tool_type,
 		#"item_chop_power =", item.chop_power,
 		#"player_attack_stat =", stats.current_attack)
-
-
 
 func _equip_from_hotbar_selection() -> void:
 	if inventory == null or hotbar == null:
@@ -200,8 +270,6 @@ func drop_item_from_inventory(index: int, amount: int = 1) -> void:
 	_animate_drop(dropped)
 
 	print("DROP: spawned", item.name, "as", dropped, "under parent", parent, "path:", dropped.get_path())
-
-
 
 func _animate_drop(dropped: Node2D) -> void:
 	# Base direction: where the player last moved / is facing

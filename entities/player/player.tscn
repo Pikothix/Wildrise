@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://bkfqm4yqkvtah"]
+[gd_scene load_steps=48 format=3 uid="uid://bkfqm4yqkvtah"]
 
 [ext_resource type="Script" uid="uid://b5v0pbg1k1rvi" path="res://entities/player/character/player.gd" id="1_y4r1p"]
 [ext_resource type="Resource" uid="uid://bpbi3t7ocesqa" path="res://systems/inventory/player_inventory.tres" id="2_3v2ag"]
@@ -6,25 +6,23 @@
 [ext_resource type="Script" uid="uid://be5tfwc6m1j70" path="res://entities/player/character/character_sprite.gd" id="3_3v2ag"]
 [ext_resource type="PackedScene" uid="uid://buso4u1xdj8j6" path="res://components/collectable/collectable_component.tscn" id="3_f1ej7"]
 [ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="3_jej6c"]
-[ext_resource type="Texture2D" uid="uid://dc72608taqymy" path="res://assets/SpriteSheet.png" id="4_3v2ag"]
 [ext_resource type="Shader" uid="uid://3hh31o6y8q4j" path="res://shaders/silhouette.gdshader" id="4_jej6c"]
 [ext_resource type="Script" uid="uid://bj4prj5dymjf0" path="res://entities/player/character/camera_2d.gd" id="5_f1ej7"]
 [ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="6_oprun"]
+[ext_resource type="PackedScene" uid="uid://bugxvty5gvjng" path="res://systems/combat/hitboxes/Hitbox.tscn" id="6_yqrof"]
 [ext_resource type="Script" uid="uid://dh7cpl6o18w83" path="res://entities/player/state_machine/idle.gd" id="7_a8ls1"]
+[ext_resource type="Texture2D" uid="uid://d3twhkbu7tq8l" path="res://assets/Character_079.png" id="7_gx6sm"]
 [ext_resource type="Script" uid="uid://o25r1is0f88" path="res://entities/player/state_machine/move.gd" id="8_qfm1y"]
 [ext_resource type="Script" uid="uid://b11sjf0evj8c2" path="res://entities/player/state_machine/chop.gd" id="8_y4r1p"]
-[ext_resource type="PackedScene" uid="uid://dhk8fwob50gbj" path="res://components/hit/hit_component.tscn" id="10_4r5pv"]
+[ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="15_gx6sm"]
+[ext_resource type="Resource" uid="uid://dkjciqlr1lheq" path="res://systems/stats/assigned_stats/player_stats.tres" id="16_yqrof"]
 
 [sub_resource type="Resource" id="Resource_f1ej7"]
 script = ExtResource("3_jej6c")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_3v2ag"]
-radius = 8.95
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x3sgo"]
-radius = 2.0
-height = 4.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_yqrof"]
+radius = 3.580166
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g6k8r"]
 shader = ExtResource("4_jej6c")
@@ -62,7 +60,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 4, 8, 12]
+"values": [0, 1, 2, 3]
 }
 
 [sub_resource type="Animation" id="Animation_wh5uk"]
@@ -80,7 +78,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [2, 6, 10, 14]
+"values": [4, 5, 6, 7]
 }
 
 [sub_resource type="Animation" id="Animation_8lhrm"]
@@ -98,7 +96,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [3, 7, 11, 15]
+"values": [8, 9, 10, 11]
 }
 
 [sub_resource type="Animation" id="Animation_up5o4"]
@@ -116,7 +114,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [1, 5, 9, 13]
+"values": [12, 13, 14, 13]
 }
 
 [sub_resource type="Animation" id="Animation_6iqoo"]
@@ -132,7 +130,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [1]
 }
 
 [sub_resource type="Animation" id="Animation_0jhxp"]
@@ -148,7 +146,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [2]
+"values": [5]
 }
 
 [sub_resource type="Animation" id="Animation_ryqyf"]
@@ -165,7 +163,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [11]
 }
 
 [sub_resource type="Animation" id="Animation_jaoer"]
@@ -181,7 +179,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [1]
+"values": [13]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mt4e1"]
@@ -279,8 +277,8 @@ nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_mi0st")
 nodes/StateMachine/position = Vector2(200, 100)
 node_connections = [&"output", 0, &"StateMachine"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8t03j"]
-size = Vector2(20, 22)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqrof"]
+size = Vector2(12, 13.5)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 1
@@ -292,18 +290,19 @@ skill_set = ExtResource("2_f1ej7")
 inventory = ExtResource("2_3v2ag")
 drop_collectable_scene = ExtResource("3_f1ej7")
 stats = SubResource("Resource_f1ej7")
-hitbox_shape = SubResource("CircleShape2D_3v2ag")
+hitbox_scene = ExtResource("6_yqrof")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 1
-position = Vector2(0, -2)
-shape = SubResource("CapsuleShape2D_x3sgo")
+position = Vector2(0, -3)
+scale = Vector2(0.84000045, 1)
+shape = SubResource("CircleShape2D_yqrof")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -12)
-texture = ExtResource("4_3v2ag")
+texture = ExtResource("7_gx6sm")
 hframes = 4
-vframes = 7
+vframes = 4
 script = ExtResource("3_3v2ag")
 
 [node name="SilhouetteSprite" type="Sprite2D" parent="Sprite2D"]
@@ -326,15 +325,14 @@ script = ExtResource("7_a8ls1")
 player = NodePath("../..")
 anim_tree = NodePath("../../AnimationTree")
 
-[node name="Chop" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "hit_comp_collision")]
-script = ExtResource("8_y4r1p")
-player = NodePath("../..")
-hit_comp_collision = NodePath("../../HitComponent/CollisionShape2D")
-
 [node name="Move" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "anim_tree")]
 script = ExtResource("8_qfm1y")
 player = NodePath("../..")
 anim_tree = NodePath("../../AnimationTree")
+
+[node name="Chop" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("8_y4r1p")
+player = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -348,14 +346,17 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/StateMachine/MoveState/StandState/blend_position = Vector2(-0.021848738, 0.6904762)
 parameters/StateMachine/MoveState/Walk/blend_position = Vector2(-0.035294116, -0.22619045)
 
-[node name="HitComponent" parent="." instance=ExtResource("10_4r5pv")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitComponent"]
-position = Vector2(0, -7)
-shape = SubResource("RectangleShape2D_8t03j")
-
 [node name="SkillDebugLabel" type="Label" parent="."]
 offset_left = -197.0
 offset_top = -104.0
 offset_right = -157.0
 offset_bottom = -81.0
+
+[node name="Hurtbox" type="Area2D" parent="."]
+z_index = -1
+script = ExtResource("15_gx6sm")
+owner_stats = ExtResource("16_yqrof")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_yqrof")

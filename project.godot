@@ -165,9 +165,10 @@ inv_cancel={
 
 2d_render/layer_4="Tool"
 2d_render/layer_5="Object"
-2d_physics/layer_1="enemy_hurtbox"
+2d_physics/layer_1="hurtbox_player"
 2d_navigation/layer_1="Chicken_navigation"
-2d_physics/layer_2="player_hurtbox"
+2d_physics/layer_2="hurtbox_enemy"
+2d_physics/layer_3="world_collision"
 2d_physics/layer_4="Tools"
 2d_physics/layer_5="Object"
 2d_physics/layer_6="Collectable"
