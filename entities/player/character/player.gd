@@ -14,14 +14,14 @@ var last_move_dir: Vector2 = Vector2.DOWN
 
 @export var drop_collectable_scene: PackedScene
 
-
+@export var respawn_delay: float = 0.0  # seconds; set > 0 later for death anim
 
 @export var stats: Stats
 
 
 @export var hitbox_scene: PackedScene
 
-@onready var hurtbox: Hurtbox = $HurtBox
+@onready var hurtbox: Hurtbox = $Hurtbox
 @onready var sprite: Sprite2D = $Sprite2D
 var _base_modulate: Color = Color.WHITE
 
@@ -42,12 +42,12 @@ var is_dead: bool = false
 func _input(event: InputEvent) -> void:
 
 	# ---------------------------------------
-	# 🔹 PREVENT HOTBAR-ONLY ACTIONS WHEN INVENTORY IS OPEN
+	# PREVENT HOTBAR-ONLY ACTIONS WHEN INVENTORY IS OPEN
 	# ---------------------------------------
 	var hotbar_blocked := (inventory_gui != null and inventory_gui.is_open)
 
 	# ---------------------------------------
-	# 🔹 Attack / Hitbox should ALWAYS work
+	# Attack / Hitbox
 	# ---------------------------------------
 	if event.is_action_pressed("hit2"):
 		_equip_from_hotbar_selection()
@@ -58,13 +58,11 @@ func _input(event: InputEvent) -> void:
 
 		var hitbox: Hitbox = hitbox_scene.instantiate()
 		hitbox.attacker_stats = stats
-		hitbox.hitbox_lifetime = 0.5               # same as before
+		hitbox.hitbox_lifetime = 0.5              
 		hitbox.current_tool = equipped_tool
 		hitbox.hit_damage = equipped_damage
 
 		hitbox.instigator = self
-
-		# Position it – start simple: on top of the player
 		hitbox.global_position = global_position
 
 		# I prefer adding to the main scene, but you can keep it under the player if you want
@@ -73,7 +71,7 @@ func _input(event: InputEvent) -> void:
 
 
 	# ---------------------------------------
-	# 🔹 Hotbar drop ONLY works when inventory is closed
+	# Hotbar drop ONLY works when inventory is closed
 	# ---------------------------------------
 	if not hotbar_blocked and event.is_action_pressed("drop_item"):
 		_drop_from_hotbar()
@@ -83,8 +81,8 @@ func _ready() -> void:
 	if stats == null:
 		push_warning("Player has NO Stats resource assigned!")
 	else:
-		print("Player Stats resource:", stats)
-		
+		print("Player Stats resource (in _ready):", stats)
+
 	if sprite:
 		_base_modulate = sprite.modulate
 
@@ -94,10 +92,26 @@ func _ready() -> void:
 		hurtbox.owner_stats = stats
 		print("Player Hurtbox owner_stats after assign:", hurtbox.owner_stats)
 		hurtbox.hit_received.connect(_on_hit_received)
+	else:
+		push_warning("Player has NO Hurtbox node (HurtBox) as a child")
 
 	if stats:
-		stats.health_depleted.connect(_on_health_depleted)
-	
+		stats.setup_stats()
+
+		var callable := Callable(self, "_on_health_depleted")
+		if not stats.is_connected("health_depleted", callable):
+			stats.health_depleted.connect(callable)
+			print("Player: connected health_depleted for Stats:", stats)
+		else:
+			print("Player: health_depleted was already connected for Stats:", stats)
+
+		# Debug: confirm the connection
+		if stats.is_connected("health_depleted", callable):
+			print("Player: health_depleted IS connected OK")
+		else:
+			print("Player: health_depleted NOT connected (something is wrong)")
+
+
 	add_to_group("player")
 	ToolManager.tool_selected.connect(on_tool_selected)
 
@@ -148,16 +162,46 @@ func _on_health_depleted() -> void:
 		return
 	is_dead = true
 
-	print("PLAYER DIED")  # debug
+	var death_pos := global_position
+	print("PLAYER DIED at", death_pos)
 
-	# Stop input / movement for now
+	# Drop all items at the death location
+	_drop_all_inventory_at(death_pos)
+
+	# Stop input / movement
 	set_physics_process(false)
 	set_process(false)
 
-	# Visual feedback – grey out
+	# Visual feedback – grey out / hide
 	if sprite:
 		sprite.modulate = Color(0.5, 0.5, 0.5)
 
+	# If no delay, respawn instantly (current behaviour you want)
+	if respawn_delay <= 0.0:
+		_respawn(Vector2.ZERO)
+		return
+
+	# Otherwise, wait – later this can be replaced with a death animation
+	await get_tree().create_timer(respawn_delay).timeout
+	_respawn(Vector2.ZERO)
+
+func _respawn(respawn_position: Vector2) -> void:
+	global_position = respawn_position
+
+	# Reset stats to full health
+	if stats:
+		stats.setup_stats()
+
+	# Reset flags & visuals
+	is_dead = false
+
+	if sprite:
+		sprite.modulate = _base_modulate
+
+	set_physics_process(true)
+	set_process(true)
+
+	print("PLAYER RESPAWNED at", respawn_position)
 
 
 
@@ -317,3 +361,52 @@ func _drop_from_hotbar() -> void:
 func on_inventory_drop_requested(index: int) -> void:
 	print("INV DROP REQUESTED: index =", index)
 	drop_item_from_inventory(index, 9999)
+
+
+func _drop_all_inventory_at(position: Vector2) -> void:
+	if inventory == null or drop_collectable_scene == null:
+		print("DEATH DROP: missing inventory or drop_collectable_scene")
+		return
+
+	var slots_count := inventory.slots.size()
+
+	for i in range(slots_count):
+		var slot: InventorySlot = inventory.slots[i]
+		if slot == null or slot.item == null:
+			continue
+
+		# Grab the item *before* we remove it
+		var item: InventoryItem = slot.item
+
+		# Take everything from this slot (9999 = effectively "all")
+		var taken: int = inventory.take_from_index(i, 9999)
+		if taken <= 0:
+			continue
+
+		var dropped := drop_collectable_scene.instantiate()
+		if dropped == null:
+			continue
+
+		var cc: CollectableComponent = dropped as CollectableComponent
+		if cc == null:
+			cc = dropped.get_node_or_null("CollectableComponent")
+
+		if cc != null:
+			cc.item_resource = item
+			cc.amount = taken
+			cc.collision_layer = 1 << 5      # Layer 6: "Collectable"
+			cc.collision_mask  = 1 << 1      # Mask 2: "player_hurtbox"
+
+		var parent := get_parent()
+		if parent == null:
+			parent = get_tree().current_scene
+		parent.add_child(dropped)
+
+		# Scatter them a bit around the death position
+		var offset := Vector2(
+			randf_range(-16.0, 16.0),
+			randf_range(-16.0, 16.0)
+		)
+		dropped.global_position = position + offset
+
+		print("DEATH DROP: dropped", item.name, "x", taken, "from slot", i)

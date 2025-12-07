@@ -58,9 +58,33 @@ func _init() -> void:
 
 
 func take_damage(amount: int) -> void:
-	#print("take_damage called with:", amount)
-	current_health = _current_health - amount
-	#print("New health:", _current_health)
+	if amount <= 0:
+		return
+
+	var prev := _current_health
+	current_health = _current_health - amount  # will call _set_current_health
+
+	print("Stats.take_damage:", self,
+		"amount =", amount,
+		"prev =", prev,
+		"new =", _current_health)
+
+
+func _set_current_health(value: float) -> void:
+	var prev := _current_health
+	_current_health = clampf(value, 0.0, current_max_health)
+	health_changed.emit(_current_health, current_max_health)
+
+	print("Stats._set_current_health:", self,
+		"prev =", prev,
+		"after clamp =", _current_health,
+		"max =", current_max_health)
+
+	# Only emit death when we actually cross the boundary from >0 to <=0
+	if prev > 0.0 and _current_health <= 0.0:
+		print("Stats: health_depleted emitted for", self)
+		health_depleted.emit()
+
 
 
 func setup_stats() -> void:
@@ -123,15 +147,6 @@ func recalculate_stats() -> void:
 	_current_health = clampf(_current_health, 0.0, current_max_health)
 	health_changed.emit(_current_health, current_max_health)
 
-
-func _set_current_health(value: float) -> void:
-	var prev := _current_health
-	_current_health = clampf(value, 0.0, current_max_health)
-	health_changed.emit(_current_health, current_max_health)
-
-	# Only emit death when we actually cross the boundary from >0 to <=0
-	if prev > 0.0 and _current_health <= 0.0:
-		health_depleted.emit()
 
 
 func _on_experience_set(new_value: float) -> void:
