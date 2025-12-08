@@ -39,6 +39,11 @@ var equipped_damage: int = 1
 var equipped_tool: DataTypes.Tools = DataTypes.Tools.None
 var is_dead: bool = false
 
+var vitality_buff: StatBuff = null
+@export var vitality_hp_per_level: float = 10.0  # HP gained per Vitality level
+
+var slayer_buff: StatBuff = null
+@export var slayer_attack_per_level: float = 0.5  # Attack gained per Slayer level
 
 
 func _input(event: InputEvent) -> void:
@@ -123,6 +128,70 @@ func _ready() -> void:
 	else:
 		push_warning("Player: could not find InventoryGui to connect drop_requested")
 
+	# After stats + skill_set are available, wire skills into stats via buffs
+	_setup_skill_stat_bonuses()
+
+
+func _setup_skill_stat_bonuses() -> void:
+	if stats == null or skill_set == null:
+		return
+
+	# --- Create buffs if they don't exist yet ---
+
+	if vitality_buff == null:
+		# ADD buff on MAX_HEALTH
+		vitality_buff = StatBuff.new(
+			Stats.BuffableStats.MAX_HEALTH,
+			0.0,
+			StatBuff.BuffType.ADD
+		)
+		stats.add_buff(vitality_buff)
+
+	if slayer_buff == null:
+		# ADD buff on ATTACK
+		slayer_buff = StatBuff.new(
+			Stats.BuffableStats.ATTACK,
+			0.0,
+			StatBuff.BuffType.ADD
+		)
+		stats.add_buff(slayer_buff)
+
+	# --- Wire Vitality skill ---
+
+	var vit_skill := skill_set.get_skill(&"vitality")
+	if vit_skill:
+		if not vit_skill.level_up.is_connected(_on_vitality_level_up):
+			vit_skill.level_up.connect(_on_vitality_level_up)
+		# Apply current level immediately
+		_on_vitality_level_up(vit_skill.level)
+
+	# --- Wire Slayer skill ---
+
+	var slayer_skill := skill_set.get_skill(&"slayer")
+	if slayer_skill:
+		if not slayer_skill.level_up.is_connected(_on_slayer_level_up):
+			slayer_skill.level_up.connect(_on_slayer_level_up)
+		# Apply current level immediately
+		_on_slayer_level_up(slayer_skill.level)
+
+func _on_vitality_level_up(new_level: int) -> void:
+	if stats == null or vitality_buff == null:
+		return
+
+	vitality_buff.buff_amount = float(new_level) * vitality_hp_per_level
+	stats.recalculate_stats()
+	print("Vitality level up:", new_level, "→ Max HP buff =", vitality_buff.buff_amount)
+
+
+func _on_slayer_level_up(new_level: int) -> void:
+	if stats == null or slayer_buff == null:
+		return
+
+	slayer_buff.buff_amount = float(new_level) * slayer_attack_per_level
+	stats.recalculate_stats()
+	print("Slayer level up:", new_level, "→ Attack buff =", slayer_buff.buff_amount)
+
+
 func _on_hit_received(damage: int, from: Area2D) -> void:
 	#print("Player took", damage, "damage from", from)  # debug
 	# Visual feedback: flash red
@@ -136,6 +205,11 @@ func _on_hit_received(damage: int, from: Area2D) -> void:
 		var attacker_pos := (from as Node2D).global_position
 		var dir := (global_position - attacker_pos).normalized()
 		velocity += dir * 40.0
+	# Award Vitality XP
+	var vitality_skill := skill_set.get_skill(&"vitality")
+	if vitality_skill and damage > 0:
+		var xp := float(damage) * 0.5
+		skill_set.add_experience(&"vitality", xp)
 
 func _process(_delta: float) -> void:
 	_update_skill_debug_label()

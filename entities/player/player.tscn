@@ -281,7 +281,7 @@ font_size = 5
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yqrof"]
 size = Vector2(12, 13.5)
 
-[sub_resource type="Resource" id="Resource_we0b7"]
+[sub_resource type="Resource" id="Resource_3wlsy"]
 resource_local_to_scene = true
 script = ExtResource("18_b2kln")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
@@ -295,11 +295,8 @@ script = ExtResource("1_y4r1p")
 skill_set = ExtResource("2_f1ej7")
 inventory = ExtResource("2_3v2ag")
 drop_collectable_scene = ExtResource("3_f1ej7")
-respawn_delay = null
 stats_component = NodePath("StatsComponent")
 hitbox_scene = ExtResource("6_yqrof")
-speed = null
-current_tool = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 1
@@ -382,4 +379,4 @@ position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_yqrof")
 
 [node name="StatsComponent" parent="." instance=ExtResource("17_we0b7")]
-stats = SubResource("Resource_we0b7")
+stats = SubResource("Resource_3wlsy")

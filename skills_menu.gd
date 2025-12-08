@@ -7,6 +7,7 @@ class_name SkillsMenu
 @onready var title_label: Label = $Panel/MarginContainer/VBox/TitleLabel
 
 var _is_open: bool = false
+var _skills_connected: bool = false
 
 func _ready() -> void:
 	visible = false
@@ -36,13 +37,16 @@ func _ensure_skill_set() -> void:
 		if skill_set != player.skill_set:
 			print("SkillsMenu: overriding exported SkillSet with Player's SkillSet:", player.skill_set)
 		skill_set = player.skill_set
+		_connect_skill_signals()   
 		return
 
 	# Fallback: use exported
 	if skill_set != null:
 		print("SkillsMenu: using exported SkillSet:", skill_set)
+		_connect_skill_signals()    
 	else:
 		push_warning("SkillsMenu: no SkillSet found (no Player and none exported)")
+
 
 func _refresh_skills() -> void:
 	if skill_set == null:
@@ -99,3 +103,22 @@ func _add_skill_row(skill: Skill) -> void:
 	row.add_child(xp_label)
 
 	skills_list.add_child(row)
+
+
+func _connect_skill_signals() -> void:
+	if _skills_connected or skill_set == null:
+		return
+
+	for s in skill_set.skills:
+		if not s.level_up.is_connected(_on_skill_changed):
+			s.level_up.connect(_on_skill_changed)
+		if not s.experience_changed.is_connected(_on_skill_changed):
+			s.experience_changed.connect(_on_skill_changed)
+
+	_skills_connected = true
+
+
+func _on_skill_changed(_value) -> void:
+	# Called when any skill gains XP or levels up
+	if _is_open:
+		_refresh_skills()

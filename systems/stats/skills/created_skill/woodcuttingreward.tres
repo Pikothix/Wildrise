@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SkillXpReward" load_steps=2 format=3 uid="uid://bq520ri42upjc"]
+
+[ext_resource type="Script" uid="uid://c534mf3sakv3" path="res://systems/stats/skill_xp_reward.gd" id="1_6pjv1"]
+
+[resource]
+script = ExtResource("1_6pjv1")
+skill_name = &"woodcutting"
+xp_amount = 15.0
+metadata/_custom_type_script = "uid://c534mf3sakv3"

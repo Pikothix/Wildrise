@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cqmremeii3qdb"]
+[gd_scene load_steps=23 format=3 uid="uid://cqmremeii3qdb"]
 
 [ext_resource type="Script" uid="uid://xjwjdskum2x5" path="res://world/generation/ChunkManager.gd" id="1_dqqhb"]
 [ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="2_ov2xu"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bpc8k1ahgx2ey" path="res://player_hp_bar.tscn" id="12_mad0u"]
 [ext_resource type="PackedScene" uid="uid://b5f1vjd5sjx45" path="res://skills_menu.tscn" id="12_ocfjn"]
 [ext_resource type="PackedScene" uid="uid://c5wra7g07oy5d" path="res://systems/inventory/scenes/inv_gui.tscn" id="13_llyeo"]
+[ext_resource type="PackedScene" uid="uid://cy0hudn5cqupe" path="res://stats_menu.tscn" id="13_ocfjn"]
 [ext_resource type="PackedScene" uid="uid://bjovrhqha8bxh" path="res://systems/inventory/scenes/inv_hotbar.tscn" id="14_2tavo"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_oo54l"]
@@ -126,5 +127,7 @@ inventory_gui = NodePath("../InventoryGui")
 scale = Vector2(5.639999, 4.200001)
 
 [node name="SkillsMenu" parent="HUD" instance=ExtResource("12_ocfjn")]
+
+[node name="StatsMenu" parent="HUD" instance=ExtResource("13_ocfjn")]
 
 [connection signal="drop_requested" from="HUD/InventoryGui" to="Player" method="_on_inventory_gui_drop_requested"]

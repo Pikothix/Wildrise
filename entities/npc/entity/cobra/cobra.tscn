@@ -1,9 +1,12 @@
-[gd_scene load_steps=51 format=3 uid="uid://diysxvn1a62l2"]
+[gd_scene load_steps=57 format=3 uid="uid://diysxvn1a62l2"]
 
 [ext_resource type="Script" uid="uid://bn7wrbe2qdstu" path="res://entities/npc/core/npc.gd" id="1_belvf"]
+[ext_resource type="Script" uid="uid://br5qv40cw240b" path="res://systems/stats/death_rewards.gd" id="2_q0kh4"]
 [ext_resource type="Resource" uid="uid://bn0jj43cg8pvl" path="res://entities/npc/entity/cobra/cobra.tres" id="2_spnfj"]
+[ext_resource type="Script" uid="uid://c534mf3sakv3" path="res://systems/stats/skill_xp_reward.gd" id="3_02rba"]
 [ext_resource type="Texture2D" uid="uid://2feb1y0hr4v" path="res://assets/zAnimals/Cobra Sprite Sheet.png" id="3_xjdrx"]
 [ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="4_gggfj"]
+[ext_resource type="Resource" uid="uid://e7byohasdyj0" path="res://systems/stats/skills/created_skill/reward_slayer.tres" id="4_nh5kd"]
 [ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="5_ai5ab"]
 [ext_resource type="Script" uid="uid://ba7yyj5254nkd" path="res://entities/npc/states/npc_idle_state.gd" id="6_83kap"]
 [ext_resource type="Script" uid="uid://c64iclllgncxk" path="res://entities/npc/states/npc_walk_state.gd" id="7_5548j"]
@@ -14,6 +17,12 @@
 [ext_resource type="PackedScene" uid="uid://bugxvty5gvjng" path="res://systems/combat/hitboxes/Hitbox.tscn" id="10_g55v6"]
 [ext_resource type="PackedScene" uid="uid://bpyaso4qhlc0j" path="res://enemy_hp_bar.tscn" id="13_g55v6"]
 [ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://stats_component.tscn" id="15_ly7e1"]
+[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="18_hux3g"]
+
+[sub_resource type="Resource" id="Resource_qhck6"]
+script = ExtResource("2_q0kh4")
+skill_rewards = Array[ExtResource("3_02rba")]([ExtResource("4_nh5kd")])
+metadata/_custom_type_script = "uid://br5qv40cw240b"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vpb2"]
 atlas = ExtResource("3_xjdrx")
@@ -276,10 +285,19 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_xemeb"]
 radius = 12.0415945
 
+[sub_resource type="Resource" id="Resource_sum6e"]
+resource_local_to_scene = true
+script = ExtResource("18_hux3g")
+speed = 10.0
+base_attack = 25.11
+faction = 1
+metadata/_custom_type_script = "uid://bri7cbbtioqux"
+
 [node name="Cobra" type="CharacterBody2D" node_paths=PackedStringArray("stats_component")]
 z_index = 1
 script = ExtResource("1_belvf")
 stats_component = NodePath("StatsComponent")
+death_rewards = SubResource("Resource_qhck6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -11)
@@ -350,4 +368,4 @@ position = Vector2(-21.999998, -17.999992)
 scale = Vector2(1.5977501, 0.4039573)
 
 [node name="StatsComponent" parent="." instance=ExtResource("15_ly7e1")]
-stats = ExtResource("2_spnfj")
+stats = SubResource("Resource_sum6e")

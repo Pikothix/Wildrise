@@ -2,6 +2,8 @@ extends NonPlayerCharacter
 
 @export var stats_component: StatsComponent
 var stats: Stats
+@export var death_rewards: DeathRewards
+
 
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -103,19 +105,18 @@ func _on_health_depleted() -> void:
 
 	# Reward XP to the player that killed this enemy
 	if _last_attacker is Player:
-		var player := _last_attacker as Player
+		var player: Player = _last_attacker
 
-		# Combat XP (Stats)
-		if player.stats:
-			var combat_xp := 25.0
-			player.stats.add_experience(combat_xp)
-			print("Gave", combat_xp, "combat XP to", player)
+		if death_rewards:
+			# Skill XP (slayer, woodcutting, etc.)
+			if player.skill_set:
+				for skill_reward in death_rewards.skill_rewards:
+					if skill_reward.xp_amount > 0.0 and skill_reward.skill_name != &"":
+						player.skill_set.add_experience(
+							skill_reward.skill_name,
+							skill_reward.xp_amount
+						)
 
-		# Slayer XP (SkillSet)
-		if player.skill_set:
-			var slayer_xp := 25.0  # or scale by enemy difficulty
-			player.skill_set.add_experience(&"slayer", slayer_xp)
-			print("Gave", slayer_xp, "Slayer XP to", player)
 
 
 	if state_machine:

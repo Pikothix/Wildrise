@@ -2,6 +2,7 @@ extends Control
 
 @export var stats_component: StatsComponent
 var stats: Stats
+var hp_tween: Tween
 
 @onready var health_bar: ProgressBar = $MarginContainer/HealthBar
 @onready var level_label: Label = $MarginContainer/LevelLabel
@@ -28,10 +29,24 @@ func _ready() -> void:
 	else:
 		push_warning("HUD: no Stats resolved; HP/level will not update")
 
+
 func _on_health_changed(current: float, max: float) -> void:
-	if health_bar:
-		health_bar.max_value = max
-		health_bar.value = current
+	if health_bar == null:
+		return
+
+	health_bar.max_value = max
+
+	# Kill previous tween if still running
+	if hp_tween and hp_tween.is_valid():
+		hp_tween.kill()
+
+	hp_tween = create_tween()
+	hp_tween.tween_property(
+		health_bar,
+		"value",
+		current,
+		0.15
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func _on_level_changed(new_level: int) -> void:
 	if level_label:
