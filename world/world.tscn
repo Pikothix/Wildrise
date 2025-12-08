@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cqmremeii3qdb"]
+[gd_scene load_steps=24 format=3 uid="uid://cqmremeii3qdb"]
 
 [ext_resource type="Script" uid="uid://xjwjdskum2x5" path="res://world/generation/ChunkManager.gd" id="1_dqqhb"]
 [ext_resource type="Script" uid="uid://853y8ovocegg" path="res://entities/npc/core/NpcSpawnData.gd" id="2_ov2xu"]
@@ -9,10 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://bkfqm4yqkvtah" path="res://entities/player/player.tscn" id="10_3ljsx"]
 [ext_resource type="Script" uid="uid://dyaux0urnehs2" path="res://scripts/hud/hud.gd" id="12_0pnie"]
 [ext_resource type="PackedScene" uid="uid://bpc8k1ahgx2ey" path="res://player_hp_bar.tscn" id="12_mad0u"]
-[ext_resource type="PackedScene" uid="uid://b5f1vjd5sjx45" path="res://skills_menu.tscn" id="12_ocfjn"]
+[ext_resource type="PackedScene" uid="uid://b5f1vjd5sjx45" path="res://systems/stats/skills_menu.tscn" id="12_ocfjn"]
 [ext_resource type="PackedScene" uid="uid://c5wra7g07oy5d" path="res://systems/inventory/scenes/inv_gui.tscn" id="13_llyeo"]
-[ext_resource type="PackedScene" uid="uid://cy0hudn5cqupe" path="res://stats_menu.tscn" id="13_ocfjn"]
+[ext_resource type="PackedScene" uid="uid://cy0hudn5cqupe" path="res://systems/stats/stats_menu.tscn" id="13_ocfjn"]
 [ext_resource type="PackedScene" uid="uid://bjovrhqha8bxh" path="res://systems/inventory/scenes/inv_hotbar.tscn" id="14_2tavo"]
+[ext_resource type="PackedScene" uid="uid://c8in6jg311tym" path="res://npc_inspect_panel.tscn" id="14_dqqhb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_oo54l"]
 
@@ -93,8 +94,9 @@ y_sort_enabled = true
 [node name="CliffLayer" type="TileMapLayer" parent="."]
 tile_set = ExtResource("8_aysyn")
 
-[node name="Player" parent="." node_paths=PackedStringArray("hotbar") instance=ExtResource("10_3ljsx")]
+[node name="Player" parent="." node_paths=PackedStringArray("hotbar", "inspect_panel") instance=ExtResource("10_3ljsx")]
 hotbar = NodePath("../HUD/Hotbar")
+inspect_panel = NodePath("../HUD/NPCInspectPanel")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory_gui", "player")]
 script = ExtResource("12_0pnie")
@@ -124,10 +126,23 @@ scale = Vector2(2.2462473, 1.8793001)
 inventory_gui = NodePath("../InventoryGui")
 
 [node name="PlayerHPBar" parent="HUD" instance=ExtResource("12_mad0u")]
-scale = Vector2(5.639999, 4.200001)
+scale = Vector2(17.042206, 9.572263)
 
 [node name="SkillsMenu" parent="HUD" instance=ExtResource("12_ocfjn")]
+offset_left = -86.0
+offset_top = 326.0
+offset_right = -86.0
+offset_bottom = 326.0
+scale = Vector2(0.8585501, 0.8040713)
 
 [node name="StatsMenu" parent="HUD" instance=ExtResource("13_ocfjn")]
+offset_top = 30.0
+offset_bottom = 30.0
+
+[node name="NPCInspectPanel" parent="HUD" instance=ExtResource("14_dqqhb")]
+offset_left = 1015.0
+offset_top = 450.0
+offset_right = 1015.0
+offset_bottom = 450.0
 
 [connection signal="drop_requested" from="HUD/InventoryGui" to="Player" method="_on_inventory_gui_drop_requested"]

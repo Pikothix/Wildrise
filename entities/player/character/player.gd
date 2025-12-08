@@ -3,12 +3,13 @@ class_name Player
 extends CharacterBody2D
 
 @export var skill_set: SkillSet
-@onready var Woodcutting: Label = $Woodcutting
-@onready var Slayer: Label = $Slayer
-
+@export var inspect_radius: float = 64.0
 @export var inventory_gui: InventoryGui   
 @export var inventory: Inventory
 @export var hotbar: HotbarUI  
+
+@export var inspect_panel: NpcInspectPanel
+
 
 var last_move_dir: Vector2 = Vector2.DOWN
 
@@ -53,6 +54,11 @@ func _input(event: InputEvent) -> void:
 	# ---------------------------------------
 	var hotbar_blocked := (inventory_gui != null and inventory_gui.is_open)
 
+
+	if event.is_action_pressed("inspect"):
+		_inspect_nearest_npc()
+		
+		
 	# ---------------------------------------
 	# Attack / Hitbox
 	# ---------------------------------------
@@ -211,27 +217,26 @@ func _on_hit_received(damage: int, from: Area2D) -> void:
 		var xp := float(damage) * 0.5
 		skill_set.add_experience(&"vitality", xp)
 
-func _process(_delta: float) -> void:
-	_update_skill_debug_label()
 
-func _update_skill_debug_label() -> void:
-	if Woodcutting == null or skill_set == null:
-		return
 
-	var wood_skill := skill_set.get_skill(&"woodcutting")  # match your skill name
-	if wood_skill == null:
-		Woodcutting.text = "Woodcutting: (no skill)"
-	var slayer_skill := skill_set.get_skill(&"slayer")
-	if slayer_skill:
-		Slayer.text = "Slayer Lv.%d  XP: %.1f" % [slayer_skill.level, slayer_skill.experience]
-
-		return
-
-	# You can format however you like
-	Woodcutting.text = "Woodcutting Lv.%d  XP: %.1f" % [
-		wood_skill.level,
-		wood_skill.experience
-	]
+#func _update_skill_debug_label() -> void:
+	#if Woodcutting == null or skill_set == null:
+		#return
+#
+	#var wood_skill := skill_set.get_skill(&"woodcutting")  # match your skill name
+	#if wood_skill == null:
+		#Woodcutting.text = "Woodcutting: (no skill)"
+	#var slayer_skill := skill_set.get_skill(&"slayer")
+	#if slayer_skill:
+		#Slayer.text = "Slayer Lv.%d  XP: %.1f" % [slayer_skill.level, slayer_skill.experience]
+#
+		#return
+#
+	## You can format however you like
+	#Woodcutting.text = "Woodcutting Lv.%d  XP: %.1f" % [
+		#wood_skill.level,
+		#wood_skill.experience
+	#]
 
 
 
@@ -488,3 +493,28 @@ func _drop_all_inventory_at(position: Vector2) -> void:
 		dropped.global_position = position + offset
 
 		print("DEATH DROP: dropped", item.name, "x", taken, "from slot", i)
+
+
+
+
+func _inspect_nearest_npc() -> void:
+	var nearest_npc: Node2D = null
+	var nearest_dist_sq := INF
+
+	for node in get_tree().get_nodes_in_group("enemy"):
+		if not (node is Node2D):
+			continue
+		if not node.is_inside_tree():
+			continue
+
+		var dist_sq := global_position.distance_squared_to(node.global_position)
+		if dist_sq < inspect_radius * inspect_radius and dist_sq < nearest_dist_sq:
+			nearest_dist_sq = dist_sq
+			nearest_npc = node
+
+	if inspect_panel == null:
+		push_warning("Player: inspect_panel is not assigned")
+		return
+
+	# Let the panel decide whether to open, switch, or close
+	inspect_panel.set_target(nearest_npc)

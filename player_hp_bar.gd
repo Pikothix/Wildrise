@@ -4,7 +4,7 @@ extends Control
 var stats: Stats
 var hp_tween: Tween
 
-@onready var health_bar: ProgressBar = $MarginContainer/HealthBar
+@onready var health_bar: TextureProgressBar = $MarginContainer/HealthBar
 @onready var level_label: Label = $MarginContainer/LevelLabel
 
 func _ready() -> void:

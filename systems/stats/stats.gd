@@ -31,6 +31,13 @@ const LEVEL_EXPONENT: float = 1.8
 const MAX_LEVEL: int = 100
 
 
+@export var base_agility: float = 5.0
+@export var base_accuracy: float = 5.0
+@export var base_crit_chance: float = 0.05
+@export var base_crit_damage: float = 1.5
+@export var base_attack_speed: float = 1.0
+
+
 
 @export var base_max_health: float = 100.0
 @export var speed: float = 50
@@ -39,6 +46,15 @@ const MAX_LEVEL: int = 100
 @export var base_attack: float = 10.0
 @export var experience: float = 0.0  
 @export var faction: Faction = Faction.PLAYER
+
+
+var current_agility: float = 0.0
+var current_accuracy: float = 0.0
+var current_crit_chance: float = 0.0
+var current_crit_damage: float = 0.0
+var current_attack_speed: float = 0.0
+
+
 
 var level: int:
 	get():
@@ -140,6 +156,14 @@ func recalculate_stats() -> void:
 	current_defence    = base_defence    * STAT_CURVES[BuffableStats.DEFENCE].sample(stat_sample_pos)
 	current_attack     = base_attack     * STAT_CURVES[BuffableStats.ATTACK].sample(stat_sample_pos)
 
+	# base values for your extra stats (no curves yet)
+	current_agility       = base_agility
+	current_accuracy      = base_accuracy
+	current_crit_chance   = base_crit_chance
+	current_crit_damage   = base_crit_damage
+	current_attack_speed  = base_attack_speed
+
+
 	# Apply multiplicative buffs
 	for stat_name in stat_multipliers:
 		var cur_property_name: String = "current_" + stat_name
@@ -188,3 +212,15 @@ func _get_level_from_experience(exp: float) -> int:
 			break
 		lvl = i
 	return lvl
+
+
+func set_level(new_level: int) -> void:
+	# Clamp to valid range
+	new_level = clamp(new_level, 1, MAX_LEVEL)
+
+	# Set XP to the minimum for that level
+	experience = _get_total_exp_for_level(new_level)
+
+	# Recalculate stats and notify
+	recalculate_stats()
+	level_changed.emit(level)

@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8in6jg311tym"]
+
+[ext_resource type="Script" uid="uid://cgg33emd4rrog" path="res://npc_inspect_panel.gd" id="1_idxwb"]
+[ext_resource type="Texture2D" uid="uid://b5r3hqmbs000r" path="res://THEMES/nine_path_panel.png" id="2_ghtb4"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_saaxq"]
+texture = ExtResource("2_ghtb4")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 5.0
+
+[node name="NPCInspectPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 17.0
+offset_top = 11.0
+offset_right = 17.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9751719, 0.97419024)
+script = ExtResource("1_idxwb")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = -140.48805
+offset_top = -128.3117
+offset_right = 159.51195
+offset_bottom = 171.6883
+scale = Vector2(0.88964885, 1.0845662)
+theme_override_styles/panel = SubResource("StyleBoxTexture_saaxq")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="StatsLabel" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2

@@ -16,8 +16,8 @@
 [ext_resource type="Script" uid="uid://8m35bb6adui1" path="res://entities/npc/states/npc_chase_state.gd" id="10_1vpb2"]
 [ext_resource type="PackedScene" uid="uid://bugxvty5gvjng" path="res://systems/combat/hitboxes/Hitbox.tscn" id="10_g55v6"]
 [ext_resource type="PackedScene" uid="uid://bpyaso4qhlc0j" path="res://enemy_hp_bar.tscn" id="13_g55v6"]
-[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://stats_component.tscn" id="15_ly7e1"]
-[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="18_hux3g"]
+[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://systems/stats/stats_component.tscn" id="15_ly7e1"]
+[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="18_q0kh4"]
 
 [sub_resource type="Resource" id="Resource_qhck6"]
 script = ExtResource("2_q0kh4")
@@ -285,15 +285,15 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_xemeb"]
 radius = 12.0415945
 
-[sub_resource type="Resource" id="Resource_sum6e"]
+[sub_resource type="Resource" id="Resource_02rba"]
 resource_local_to_scene = true
-script = ExtResource("18_hux3g")
+script = ExtResource("18_q0kh4")
 speed = 10.0
 base_attack = 25.11
 faction = 1
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
 
-[node name="Cobra" type="CharacterBody2D" node_paths=PackedStringArray("stats_component")]
+[node name="Cobra" type="CharacterBody2D" node_paths=PackedStringArray("stats_component") groups=["enemy"]]
 z_index = 1
 script = ExtResource("1_belvf")
 stats_component = NodePath("StatsComponent")
@@ -364,8 +364,8 @@ shape = SubResource("CircleShape2D_xemeb")
 
 [node name="EnemyHPBar" parent="." instance=ExtResource("13_g55v6")]
 z_index = 29
-position = Vector2(-21.999998, -17.999992)
-scale = Vector2(1.5977501, 0.4039573)
+position = Vector2(-17, -15)
+scale = Vector2(1.9033207, 1.0438406)
 
 [node name="StatsComponent" parent="." instance=ExtResource("15_ly7e1")]
-stats = SubResource("Resource_sum6e")
+stats = SubResource("Resource_02rba")

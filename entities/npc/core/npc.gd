@@ -4,6 +4,12 @@ extends NonPlayerCharacter
 var stats: Stats
 @export var death_rewards: DeathRewards
 
+@export var min_level: int = 1
+@export var max_level: int = 1
+@export var randomize_level_on_spawn: bool = true
+
+@export var display_name: String = "Cobra"
+
 
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -29,26 +35,40 @@ func _ready() -> void:
 	
 	if stats == null:
 		push_warning("StatsComponent has no Stats resource; death logic won't run.")
-	else:
-		# Wire Hurtbox to use the same Stats instance
-		if hurtbox:
-			hurtbox.owner_stats = stats
-			if not hurtbox.hit_received.is_connected(_on_hit_received):
-				hurtbox.hit_received.connect(_on_hit_received)
-		else:
-			push_warning("Enemy has no Hurtbox child; cannot receive damage.")
+		return
 
-		# Connect death signal once
-		if not stats.health_depleted.is_connected(_on_health_depleted):
-			stats.health_depleted.connect(_on_health_depleted)
+	# 🔹 RANDOMISE LEVEL ON SPAWN
+	if randomize_level_on_spawn:
+		var low = min(min_level, max_level)
+		var high = max(min_level, max_level)
+		var random_level := randi_range(low, high)
+		stats.set_level(random_level)
+		print("NPC", name, "base level", random_level,
+			"ATK", stats.current_attack,
+			"DEF", stats.current_defence,
+			"HP", stats.current_max_health)
+
+		# 🔹 Apply per-NPC random variance AFTER level scaling
+		_apply_stat_variance(stats)
+
+
+	# --- Wire Hurtbox to use the same Stats instance ---
+	if hurtbox:
+		hurtbox.owner_stats = stats
+		if not hurtbox.hit_received.is_connected(_on_hit_received):
+			hurtbox.hit_received.connect(_on_hit_received)
+	else:
+		push_warning("Enemy has no Hurtbox child; cannot receive damage.")
+
+	# --- Connect death signal once ---
+	if not stats.health_depleted.is_connected(_on_health_depleted):
+		stats.health_depleted.connect(_on_health_depleted)
 
 	# --- Visual setup ---
 	if anim_sprite:
 		_base_modulate = anim_sprite.modulate
 
 
-	if hurtbox:
-		hurtbox.hit_received.connect(_on_hit_received)
 
 
 func _on_hit_received(damage: int, from: Area2D) -> void:
@@ -150,3 +170,24 @@ func update_facing_from_vector(dir: Vector2) -> void:
 
 	if anim_sprite:
 		anim_sprite.flip_h = _facing_left 
+		
+		
+
+func _apply_stat_variance(s: Stats) -> void:
+	var variance := 0.15
+
+	s.base_max_health   *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_attack       *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_defence      *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_agility      *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_accuracy     *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_crit_chance  *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_crit_damage  *= randf_range(1.0 - variance, 1.0 + variance)
+	s.base_attack_speed *= randf_range(1.0 - variance, 1.0 + variance)
+
+	s.recalculate_stats()
+	s.current_health = s.current_max_health
+
+	print("NPC", name, "VARIANCE APPLIED → ATK %.1f DEF %.1f HP %.1f" % [
+		s.current_attack, s.current_defence, s.current_max_health
+	])

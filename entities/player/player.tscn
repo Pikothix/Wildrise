@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://bkfqm4yqkvtah"]
+[gd_scene load_steps=48 format=3 uid="uid://bkfqm4yqkvtah"]
 
 [ext_resource type="Script" uid="uid://b5v0pbg1k1rvi" path="res://entities/player/character/player.gd" id="1_y4r1p"]
 [ext_resource type="Resource" uid="uid://bpbi3t7ocesqa" path="res://systems/inventory/player_inventory.tres" id="2_3v2ag"]
@@ -13,9 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://d3twhkbu7tq8l" path="res://assets/Character_079.png" id="7_gx6sm"]
 [ext_resource type="Script" uid="uid://o25r1is0f88" path="res://entities/player/state_machine/move.gd" id="8_qfm1y"]
 [ext_resource type="Script" uid="uid://b11sjf0evj8c2" path="res://entities/player/state_machine/chop.gd" id="8_y4r1p"]
-[ext_resource type="FontVariation" uid="uid://bfdgawb7finfk" path="res://systems/inventory/fonts/zx_palm_variation.tres" id="15_3wlsy"]
 [ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="15_gx6sm"]
-[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://stats_component.tscn" id="17_we0b7"]
+[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://systems/stats/stats_component.tscn" id="17_we0b7"]
 [ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="18_b2kln"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yqrof"]
@@ -274,14 +273,10 @@ nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_mi0st")
 nodes/StateMachine/position = Vector2(200, 100)
 node_connections = [&"output", 0, &"StateMachine"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_b2kln"]
-font = ExtResource("15_3wlsy")
-font_size = 5
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yqrof"]
 size = Vector2(12, 13.5)
 
-[sub_resource type="Resource" id="Resource_3wlsy"]
+[sub_resource type="Resource" id="Resource_yqrof"]
 resource_local_to_scene = true
 script = ExtResource("18_b2kln")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
@@ -352,24 +347,6 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/StateMachine/MoveState/StandState/blend_position = Vector2(-0.021848738, 0.6904762)
 parameters/StateMachine/MoveState/Walk/blend_position = Vector2(-0.035294116, -0.22619045)
 
-[node name="Woodcutting" type="Label" parent="."]
-z_index = 21
-offset_left = -220.0
-offset_top = -1.0
-offset_right = -101.0
-offset_bottom = 51.0
-text = "44"
-label_settings = SubResource("LabelSettings_b2kln")
-
-[node name="Slayer" type="Label" parent="."]
-z_index = 21
-offset_left = -214.0
-offset_top = 88.0
-offset_right = -95.0
-offset_bottom = 140.0
-text = "44"
-label_settings = SubResource("LabelSettings_b2kln")
-
 [node name="Hurtbox" type="Area2D" parent="."]
 z_index = -1
 script = ExtResource("15_gx6sm")
@@ -379,4 +356,4 @@ position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_yqrof")
 
 [node name="StatsComponent" parent="." instance=ExtResource("17_we0b7")]
-stats = SubResource("Resource_3wlsy")
+stats = SubResource("Resource_yqrof")

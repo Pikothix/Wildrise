@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://bkvsc627baopy"]
+[gd_resource type="Theme" load_steps=28 format=3 uid="uid://bkvsc627baopy"]
 
 [ext_resource type="Texture2D" uid="uid://c2qtohktqamqb" path="res://THEMES/button_disabled.png" id="1_845uw"]
 [ext_resource type="Texture2D" uid="uid://disanxj8fgb34" path="res://THEMES/button_hover.png" id="2_3kvcb"]
@@ -6,6 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://bgq3r4c1xs0li" path="res://THEMES/button_pressed.png" id="4_w0otc"]
 [ext_resource type="Texture2D" uid="uid://b5r3hqmbs000r" path="res://THEMES/nine_path_panel.png" id="5_3kvcb"]
 [ext_resource type="FontVariation" uid="uid://bfdgawb7finfk" path="res://systems/inventory/fonts/zx_palm_variation.tres" id="5_33mjp"]
+[ext_resource type="Texture2D" uid="uid://bpkbox43vd3xx" path="res://THEMES/tab_disabled.png" id="6_ikf6b"]
+[ext_resource type="Texture2D" uid="uid://dk6r81ht1slnj" path="res://THEMES/tab_hover.png" id="7_d7ad8"]
+[ext_resource type="Texture2D" uid="uid://cuyg0a561guf1" path="res://THEMES/tab_selected.png" id="8_u4wqo"]
+[ext_resource type="Texture2D" uid="uid://ctvwnvi2gwl1w" path="res://THEMES/tab_unselected.png" id="9_um0d0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ikf6b"]
 texture = ExtResource("1_845uw")
@@ -50,6 +54,42 @@ texture_margin_top = 6.0
 texture_margin_right = 6.0
 texture_margin_bottom = 5.0
 
+[sub_resource type="DPITexture" id="DPITexture_crjqx"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#fff\" fill-opacity=\".75\" d=\"m1 3 2-2 5 5 5-5 2 2-5 5 5 5-2 2-5-5-5 5-2-2 5-5z\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_sjhr2"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\" fill-opacity=\".75\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".65\" stroke-width=\"2\" d=\"m9 5-3 3 3 3\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_6h6rh"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m9 5-3 3 3 3\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_6ukqv"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"32\"><path fill=\"#d3d3d3\" d=\"m5 1h6v30h-6z\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_8t32k"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\" fill-opacity=\".75\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".65\" stroke-width=\"2\" d=\"m7 5 3 3-3 3\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_yhgwk"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#fefffe\"/><path fill=\"none\" stroke=\"#1a1a1a\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m7 5 3 3-3 3\"/></svg>
+"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_enfva"]
+texture = ExtResource("6_ikf6b")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wma5t"]
+texture = ExtResource("7_d7ad8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pw7hy"]
+texture = ExtResource("8_u4wqo")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c235q"]
+texture = ExtResource("9_um0d0")
+
 [resource]
 default_font = ExtResource("5_33mjp")
 default_font_size = 8
@@ -61,3 +101,22 @@ CustomMarginContainer/base_type = &"MarginContainer"
 CustomMarginContainer/styles/Theme = SubResource("StyleBoxTexture_dfb5g")
 Label/styles/focus = SubResource("StyleBoxTexture_3kvcb")
 Panel/styles/panel = SubResource("StyleBoxTexture_w0otc")
+TabBar/colors/drop_mark_color = Color(1, 1, 1, 1)
+TabBar/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+TabBar/colors/font_hovered_color = Color(0.95, 0.95, 0.95, 1)
+TabBar/colors/font_outline_color = Color(0, 0, 0, 1)
+TabBar/colors/font_selected_color = Color(0.95, 0.95, 0.95, 1)
+TabBar/colors/font_unselected_color = Color(0.7, 0.7, 0.7, 1)
+TabBar/constants/h_separation = 4
+TabBar/constants/icon_max_width = 0
+TabBar/constants/outline_size = 0
+TabBar/icons/close = SubResource("DPITexture_crjqx")
+TabBar/icons/decrement = SubResource("DPITexture_sjhr2")
+TabBar/icons/decrement_highlight = SubResource("DPITexture_6h6rh")
+TabBar/icons/drop_mark = SubResource("DPITexture_6ukqv")
+TabBar/icons/increment = SubResource("DPITexture_8t32k")
+TabBar/icons/increment_highlight = SubResource("DPITexture_yhgwk")
+TabBar/styles/tab_disabled = SubResource("StyleBoxTexture_enfva")
+TabBar/styles/tab_hovered = SubResource("StyleBoxTexture_wma5t")
+TabBar/styles/tab_selected = SubResource("StyleBoxTexture_pw7hy")
+TabBar/styles/tab_unselected = SubResource("StyleBoxTexture_c235q")
