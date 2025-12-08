@@ -1,6 +1,14 @@
 extends Resource
 class_name Stats
 
+
+
+signal health_depleted
+signal health_changed(current_health: float, max_health: float)
+signal level_changed(new_level: int)
+
+
+
 enum BuffableStats {
 	MAX_HEALTH,
 	DEFENCE,
@@ -22,15 +30,14 @@ const BASE_LEVEL_EXP: float = 150.0
 const LEVEL_EXPONENT: float = 1.8
 const MAX_LEVEL: int = 100
 
-signal health_depleted
-signal health_changed(current_health: float, max_health: float)
+
 
 @export var base_max_health: float = 100.0
 @export var speed: float = 50
 @export var base_strength: float = 10.0
 @export var base_defence: float = 10.0
 @export var base_attack: float = 10.0
-@export var experience: float = 0.0 : set = _on_experience_set
+@export var experience: float = 0.0  
 @export var faction: Faction = Faction.PLAYER
 
 var level: int:
@@ -64,10 +71,10 @@ func take_damage(amount: int) -> void:
 	var prev := _current_health
 	current_health = _current_health - amount  # will call _set_current_health
 
-	print("Stats.take_damage:", self,
-		"amount =", amount,
-		"prev =", prev,
-		"new =", _current_health)
+	#print("Stats.take_damage:", self,
+		#"amount =", amount,
+		#"prev =", prev,
+		#"new =", _current_health)
 
 
 func _set_current_health(value: float) -> void:
@@ -75,10 +82,10 @@ func _set_current_health(value: float) -> void:
 	_current_health = clampf(value, 0.0, current_max_health)
 	health_changed.emit(_current_health, current_max_health)
 
-	print("Stats._set_current_health:", self,
-		"prev =", prev,
-		"after clamp =", _current_health,
-		"max =", current_max_health)
+	#print("Stats._set_current_health:", self,
+		#"prev =", prev,
+		#"after clamp =", _current_health,
+		#"max =", current_max_health)
 
 	# Only emit death when we actually cross the boundary from >0 to <=0
 	if prev > 0.0 and _current_health <= 0.0:
@@ -149,12 +156,22 @@ func recalculate_stats() -> void:
 
 
 
-func _on_experience_set(new_value: float) -> void:
-	var old_level: int = level
-	experience = new_value
+func add_experience(amount: float) -> void:
+	if amount <= 0.0:
+		return
 
-	if old_level != level:
+	var old_level: int = level
+	experience += amount
+
+	print("XP DEBUG: Added", amount, "XP. Total XP =", experience, "Level =", level)
+
+	var new_level: int = level
+	if new_level != old_level:
 		recalculate_stats()
+		level_changed.emit(new_level)
+		print("XP DEBUG: Level up! New level =", new_level)
+
+
 
 
 func _get_total_exp_for_level(lvl: int) -> float:

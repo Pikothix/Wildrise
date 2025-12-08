@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://diysxvn1a62l2"]
+[gd_scene load_steps=51 format=3 uid="uid://diysxvn1a62l2"]
 
 [ext_resource type="Script" uid="uid://bn7wrbe2qdstu" path="res://entities/npc/core/npc.gd" id="1_belvf"]
 [ext_resource type="Resource" uid="uid://bn0jj43cg8pvl" path="res://entities/npc/entity/cobra/cobra.tres" id="2_spnfj"]
@@ -12,6 +12,8 @@
 [ext_resource type="Script" uid="uid://d2s1rmtoh0h27" path="res://entities/npc/states/npc_attack_state.gd" id="9_weka2"]
 [ext_resource type="Script" uid="uid://8m35bb6adui1" path="res://entities/npc/states/npc_chase_state.gd" id="10_1vpb2"]
 [ext_resource type="PackedScene" uid="uid://bugxvty5gvjng" path="res://systems/combat/hitboxes/Hitbox.tscn" id="10_g55v6"]
+[ext_resource type="PackedScene" uid="uid://bpyaso4qhlc0j" path="res://enemy_hp_bar.tscn" id="13_g55v6"]
+[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://stats_component.tscn" id="15_ly7e1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1vpb2"]
 atlas = ExtResource("3_xjdrx")
@@ -274,9 +276,10 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_xemeb"]
 radius = 12.0415945
 
-[node name="Cobra" type="CharacterBody2D"]
+[node name="Cobra" type="CharacterBody2D" node_paths=PackedStringArray("stats_component")]
 z_index = 1
 script = ExtResource("1_belvf")
+stats_component = NodePath("StatsComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -11)
@@ -340,3 +343,11 @@ metadata/_custom_type_script = "uid://cyk3nihhamedr"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(-4, -2)
 shape = SubResource("CircleShape2D_xemeb")
+
+[node name="EnemyHPBar" parent="." instance=ExtResource("13_g55v6")]
+z_index = 29
+position = Vector2(-21.999998, -17.999992)
+scale = Vector2(1.5977501, 0.4039573)
+
+[node name="StatsComponent" parent="." instance=ExtResource("15_ly7e1")]
+stats = ExtResource("2_spnfj")

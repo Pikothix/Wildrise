@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpc8k1ahgx2ey"]
+
+[ext_resource type="Script" uid="uid://cljcgseh23llo" path="res://player_hp_bar.gd" id="1_n57ta"]
+
+[node name="PlayerHPBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_n57ta")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="MarginContainer"]
+layout_mode = 2

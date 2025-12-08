@@ -1,0 +1,63 @@
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://bkvsc627baopy"]
+
+[ext_resource type="Texture2D" uid="uid://c2qtohktqamqb" path="res://THEMES/button_disabled.png" id="1_845uw"]
+[ext_resource type="Texture2D" uid="uid://disanxj8fgb34" path="res://THEMES/button_hover.png" id="2_3kvcb"]
+[ext_resource type="Texture2D" uid="uid://w7akwwf8yl38" path="res://THEMES/button_normal.png" id="3_dfb5g"]
+[ext_resource type="Texture2D" uid="uid://bgq3r4c1xs0li" path="res://THEMES/button_pressed.png" id="4_w0otc"]
+[ext_resource type="Texture2D" uid="uid://b5r3hqmbs000r" path="res://THEMES/nine_path_panel.png" id="5_3kvcb"]
+[ext_resource type="FontVariation" uid="uid://bfdgawb7finfk" path="res://systems/inventory/fonts/zx_palm_variation.tres" id="5_33mjp"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ikf6b"]
+texture = ExtResource("1_845uw")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d7ad8"]
+texture = ExtResource("2_3kvcb")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u4wqo"]
+texture = ExtResource("3_dfb5g")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_um0d0"]
+texture = ExtResource("4_w0otc")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dfb5g"]
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3kvcb"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w0otc"]
+texture = ExtResource("5_3kvcb")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 5.0
+
+[resource]
+default_font = ExtResource("5_33mjp")
+default_font_size = 8
+Button/styles/disabled = SubResource("StyleBoxTexture_ikf6b")
+Button/styles/hover = SubResource("StyleBoxTexture_d7ad8")
+Button/styles/normal = SubResource("StyleBoxTexture_u4wqo")
+Button/styles/pressed = SubResource("StyleBoxTexture_um0d0")
+CustomMarginContainer/base_type = &"MarginContainer"
+CustomMarginContainer/styles/Theme = SubResource("StyleBoxTexture_dfb5g")
+Label/styles/focus = SubResource("StyleBoxTexture_3kvcb")
+Panel/styles/panel = SubResource("StyleBoxTexture_w0otc")

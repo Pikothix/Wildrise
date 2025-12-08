@@ -51,10 +51,10 @@ func _on_area_entered(area: Area2D) -> void:
 	if dmg <= 0:
 		return
 
-	print("Hitbox from", instigator, 
-		"hit Hurtbox node", hb.name, 
-		"parent:", owner_node, 
-		"owner_stats:", hb.owner_stats, 
-		"for", dmg, "damage")
+	#print("Hitbox from", instigator, 
+		#"hit Hurtbox node", hb.name, 
+		#"parent:", owner_node, 
+		#"owner_stats:", hb.owner_stats, 
+		#"for", dmg, "damage")
 
 	hb.receive_hit(dmg, self)

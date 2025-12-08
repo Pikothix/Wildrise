@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpyaso4qhlc0j"]
+
+[ext_resource type="Script" uid="uid://bbgrn26j5it2t" path="res://enemy_hp_bar.gd" id="1_nwgw5"]
+
+[node name="EnemyHealthBar" type="Node2D"]
+script = ExtResource("1_nwgw5")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Bar" type="ProgressBar" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 27.0

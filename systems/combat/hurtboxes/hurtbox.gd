@@ -20,8 +20,8 @@ func receive_hit(damage: int, from: Area2D) -> void:
 	hit_received.emit(damage, from)
 
 	if owner_stats:
-		print("HURTBOX for", owner_stats, "taking", damage, "damage. HP before:", owner_stats.current_health)
+		#print("HURTBOX for", owner_stats, "taking", damage, "damage. HP before:", owner_stats.current_health)
 		owner_stats.take_damage(damage)
-		print("HP after:", owner_stats.current_health)
-	else:
-		print("HURTBOX has NO owner_stats!")
+		#print("HP after:", owner_stats.current_health)
+	#else:
+		#print("HURTBOX has NO owner_stats!")

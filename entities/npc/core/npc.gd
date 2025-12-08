@@ -1,6 +1,7 @@
 extends NonPlayerCharacter
 
-@export var stats: Stats  # optional, sync with Hurtbox if empty
+@export var stats_component: StatsComponent
+var stats: Stats
 
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -15,21 +16,34 @@ var _facing_left: bool = false
 
 
 func _ready() -> void:
+	# Keep existing random walk setup
 	walk_cycles = randi_range(min_walk_cycle, max_walk_cycle)
 
-	# Keep stats / hurtbox.owner_stats in sync
-	if stats == null and hurtbox and hurtbox.owner_stats:
-		stats = hurtbox.owner_stats
-	elif stats != null and hurtbox and hurtbox.owner_stats == null:
-		hurtbox.owner_stats = stats
-
-	if stats:
-		stats.health_depleted.connect(_on_health_depleted)
+	# --- Resolve stats from StatsComponent ---
+	if stats_component:
+		stats = stats_component.get_stats()
 	else:
-		push_warning("Enemy has no Stats resource assigned; death logic won't run.")
+		push_warning("Enemy has no StatsComponent assigned; cannot resolve Stats.")
+	
+	if stats == null:
+		push_warning("StatsComponent has no Stats resource; death logic won't run.")
+	else:
+		# Wire Hurtbox to use the same Stats instance
+		if hurtbox:
+			hurtbox.owner_stats = stats
+			if not hurtbox.hit_received.is_connected(_on_hit_received):
+				hurtbox.hit_received.connect(_on_hit_received)
+		else:
+			push_warning("Enemy has no Hurtbox child; cannot receive damage.")
 
+		# Connect death signal once
+		if not stats.health_depleted.is_connected(_on_health_depleted):
+			stats.health_depleted.connect(_on_health_depleted)
+
+	# --- Visual setup ---
 	if anim_sprite:
 		_base_modulate = anim_sprite.modulate
+
 
 	if hurtbox:
 		hurtbox.hit_received.connect(_on_hit_received)
@@ -86,6 +100,23 @@ func _on_health_depleted() -> void:
 	if is_dead:
 		return
 	is_dead = true
+
+	# Reward XP to the player that killed this enemy
+	if _last_attacker is Player:
+		var player := _last_attacker as Player
+
+		# Combat XP (Stats)
+		if player.stats:
+			var combat_xp := 25.0
+			player.stats.add_experience(combat_xp)
+			print("Gave", combat_xp, "combat XP to", player)
+
+		# Slayer XP (SkillSet)
+		if player.skill_set:
+			var slayer_xp := 25.0  # or scale by enemy difficulty
+			player.skill_set.add_experience(&"slayer", slayer_xp)
+			print("Gave", slayer_xp, "Slayer XP to", player)
+
 
 	if state_machine:
 		state_machine.transition_to("Death")

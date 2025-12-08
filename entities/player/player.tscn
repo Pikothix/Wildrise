@@ -5,7 +5,6 @@
 [ext_resource type="Resource" uid="uid://by6spn5htmj3c" path="res://systems/stats/skills/assigned_skill/player_skill.tres" id="2_f1ej7"]
 [ext_resource type="Script" uid="uid://be5tfwc6m1j70" path="res://entities/player/character/character_sprite.gd" id="3_3v2ag"]
 [ext_resource type="PackedScene" uid="uid://buso4u1xdj8j6" path="res://components/collectable/collectable_component.tscn" id="3_f1ej7"]
-[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="3_jej6c"]
 [ext_resource type="Shader" uid="uid://3hh31o6y8q4j" path="res://shaders/silhouette.gdshader" id="4_jej6c"]
 [ext_resource type="Script" uid="uid://bj4prj5dymjf0" path="res://entities/player/character/camera_2d.gd" id="5_f1ej7"]
 [ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="6_oprun"]
@@ -16,11 +15,8 @@
 [ext_resource type="Script" uid="uid://b11sjf0evj8c2" path="res://entities/player/state_machine/chop.gd" id="8_y4r1p"]
 [ext_resource type="FontVariation" uid="uid://bfdgawb7finfk" path="res://systems/inventory/fonts/zx_palm_variation.tres" id="15_3wlsy"]
 [ext_resource type="Script" uid="uid://c05etkv1q0ktx" path="res://systems/combat/hurtboxes/hurtbox.gd" id="15_gx6sm"]
-[ext_resource type="Texture2D" uid="uid://o6nh13mwbm6t" path="res://assets/icon.svg" id="17_b2kln"]
-
-[sub_resource type="Resource" id="Resource_f1ej7"]
-script = ExtResource("3_jej6c")
-metadata/_custom_type_script = "uid://bri7cbbtioqux"
+[ext_resource type="PackedScene" uid="uid://b15givxyr8k7y" path="res://stats_component.tscn" id="17_we0b7"]
+[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="18_b2kln"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yqrof"]
 radius = 3.580166
@@ -285,7 +281,12 @@ font_size = 5
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yqrof"]
 size = Vector2(12, 13.5)
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[sub_resource type="Resource" id="Resource_we0b7"]
+resource_local_to_scene = true
+script = ExtResource("18_b2kln")
+metadata/_custom_type_script = "uid://bri7cbbtioqux"
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("stats_component") groups=["player"]]
 z_index = 1
 collision_layer = 2
 collision_mask = 33
@@ -294,8 +295,11 @@ script = ExtResource("1_y4r1p")
 skill_set = ExtResource("2_f1ej7")
 inventory = ExtResource("2_3v2ag")
 drop_collectable_scene = ExtResource("3_f1ej7")
-stats = SubResource("Resource_f1ej7")
+respawn_delay = null
+stats_component = NodePath("StatsComponent")
 hitbox_scene = ExtResource("6_yqrof")
+speed = null
+current_tool = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 1
@@ -351,27 +355,23 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/StateMachine/MoveState/StandState/blend_position = Vector2(-0.021848738, 0.6904762)
 parameters/StateMachine/MoveState/Walk/blend_position = Vector2(-0.035294116, -0.22619045)
 
-[node name="SkillDebugLabel" type="Label" parent="."]
+[node name="Woodcutting" type="Label" parent="."]
 z_index = 21
-offset_left = -215.0
-offset_top = -113.0
-offset_right = -96.0
-offset_bottom = -61.0
+offset_left = -220.0
+offset_top = -1.0
+offset_right = -101.0
+offset_bottom = 51.0
 text = "44"
 label_settings = SubResource("LabelSettings_b2kln")
 
-[node name="TextureRect" type="TextureRect" parent="SkillDebugLabel"]
-visible = false
-modulate = Color(0, 0, 0, 1)
-self_modulate = Color(0, 0, 0, 1)
-z_index = -3
-layout_mode = 0
-offset_left = -13.0
-offset_top = -12.0
-offset_right = 115.0
-offset_bottom = 116.0
-scale = Vector2(1.8012938, 0.9956369)
-texture = ExtResource("17_b2kln")
+[node name="Slayer" type="Label" parent="."]
+z_index = 21
+offset_left = -214.0
+offset_top = 88.0
+offset_right = -95.0
+offset_bottom = 140.0
+text = "44"
+label_settings = SubResource("LabelSettings_b2kln")
 
 [node name="Hurtbox" type="Area2D" parent="."]
 z_index = -1
@@ -380,3 +380,6 @@ script = ExtResource("15_gx6sm")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_yqrof")
+
+[node name="StatsComponent" parent="." instance=ExtResource("17_we0b7")]
+stats = SubResource("Resource_we0b7")

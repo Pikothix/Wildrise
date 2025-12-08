@@ -3,8 +3,8 @@ class_name Player
 extends CharacterBody2D
 
 @export var skill_set: SkillSet
-@onready var skill_debug_label: Label = $SkillDebugLabel
-
+@onready var Woodcutting: Label = $Woodcutting
+@onready var Slayer: Label = $Slayer
 
 @export var inventory_gui: InventoryGui   
 @export var inventory: Inventory
@@ -16,7 +16,9 @@ var last_move_dir: Vector2 = Vector2.DOWN
 
 @export var respawn_delay: float = 0.0  # seconds; set > 0 later for death anim
 
-@export var stats: Stats
+@export var stats_component: StatsComponent
+
+var stats: Stats
 
 
 @export var hitbox_scene: PackedScene
@@ -78,16 +80,22 @@ func _input(event: InputEvent) -> void:
 
 
 func _ready() -> void:
-	if stats == null:
-		push_warning("Player has NO Stats resource assigned!")
+	# --- Resolve stats from component ---
+	if stats_component == null:
+		push_warning("Player has NO StatsComponent assigned!")
 	else:
-		print("Player Stats resource (in _ready):", stats)
+		stats = stats_component.get_stats()
+		if stats == null:
+			push_warning("StatsComponent has NO Stats resource assigned!")
+		else:
+			print("Player Stats (from StatsComponent):", stats)
 
 	if sprite:
 		_base_modulate = sprite.modulate
 
 	print("Player _ready. stats =", stats, "hurtbox =", hurtbox)
 
+	# --- Wire hurtbox to use the same Stats instance ---
 	if hurtbox:
 		hurtbox.owner_stats = stats
 		print("Player Hurtbox owner_stats after assign:", hurtbox.owner_stats)
@@ -95,6 +103,7 @@ func _ready() -> void:
 	else:
 		push_warning("Player has NO Hurtbox node (HurtBox) as a child")
 
+	# --- Stats signals / setup, same as before ---
 	if stats:
 		stats.setup_stats()
 
@@ -102,15 +111,6 @@ func _ready() -> void:
 		if not stats.is_connected("health_depleted", callable):
 			stats.health_depleted.connect(callable)
 			print("Player: connected health_depleted for Stats:", stats)
-		else:
-			print("Player: health_depleted was already connected for Stats:", stats)
-
-		# Debug: confirm the connection
-		if stats.is_connected("health_depleted", callable):
-			print("Player: health_depleted IS connected OK")
-		else:
-			print("Player: health_depleted NOT connected (something is wrong)")
-
 
 	add_to_group("player")
 	ToolManager.tool_selected.connect(on_tool_selected)
@@ -141,16 +141,20 @@ func _process(_delta: float) -> void:
 	_update_skill_debug_label()
 
 func _update_skill_debug_label() -> void:
-	if skill_debug_label == null or skill_set == null:
+	if Woodcutting == null or skill_set == null:
 		return
 
 	var wood_skill := skill_set.get_skill(&"woodcutting")  # match your skill name
 	if wood_skill == null:
-		skill_debug_label.text = "Woodcutting: (no skill)"
+		Woodcutting.text = "Woodcutting: (no skill)"
+	var slayer_skill := skill_set.get_skill(&"slayer")
+	if slayer_skill:
+		Slayer.text = "Slayer Lv.%d  XP: %.1f" % [slayer_skill.level, slayer_skill.experience]
+
 		return
 
 	# You can format however you like
-	skill_debug_label.text = "Woodcutting Lv.%d  XP: %.1f" % [
+	Woodcutting.text = "Woodcutting Lv.%d  XP: %.1f" % [
 		wood_skill.level,
 		wood_skill.experience
 	]
@@ -253,7 +257,7 @@ func _equip_from_hotbar_selection() -> void:
 
 	var slot: InventorySlot = inventory.slots[slot_index]
 	if slot == null or slot.item == null:
-		print("Player: hotbar slot", slot_index, "is empty.")
+		#print("Player: hotbar slot", slot_index, "is empty.")
 		update_current_tool_from_inventory_item(null)
 		return
 

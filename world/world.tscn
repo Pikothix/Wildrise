@@ -7,8 +7,9 @@
 [ext_resource type="Resource" uid="uid://ddm8w714kxx14" path="res://world/config/default_world_gen_config.tres" id="7_p2iis"]
 [ext_resource type="TileSet" uid="uid://c3jsf0hdthpan" path="res://assets/tile.tres" id="8_aysyn"]
 [ext_resource type="PackedScene" uid="uid://bkfqm4yqkvtah" path="res://entities/player/player.tscn" id="10_3ljsx"]
-[ext_resource type="Script" uid="uid://bri7cbbtioqux" path="res://systems/stats/stats.gd" id="11_gi7ib"]
 [ext_resource type="Script" uid="uid://dyaux0urnehs2" path="res://scripts/hud/hud.gd" id="12_0pnie"]
+[ext_resource type="PackedScene" uid="uid://bpc8k1ahgx2ey" path="res://player_hp_bar.tscn" id="12_mad0u"]
+[ext_resource type="PackedScene" uid="uid://b5f1vjd5sjx45" path="res://skills_menu.tscn" id="12_ocfjn"]
 [ext_resource type="PackedScene" uid="uid://c5wra7g07oy5d" path="res://systems/inventory/scenes/inv_gui.tscn" id="13_llyeo"]
 [ext_resource type="PackedScene" uid="uid://bjovrhqha8bxh" path="res://systems/inventory/scenes/inv_hotbar.tscn" id="14_2tavo"]
 
@@ -33,11 +34,6 @@ noise = SubResource("FastNoiseLite_munwf")
 noise = SubResource("FastNoiseLite_0nbtd")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i7141"]
-
-[sub_resource type="Resource" id="Resource_ov2xu"]
-resource_local_to_scene = true
-script = ExtResource("11_gi7ib")
-metadata/_custom_type_script = "uid://bri7cbbtioqux"
 
 [node name="Main" type="Node2D"]
 y_sort_enabled = true
@@ -98,7 +94,6 @@ tile_set = ExtResource("8_aysyn")
 
 [node name="Player" parent="." node_paths=PackedStringArray("hotbar") instance=ExtResource("10_3ljsx")]
 hotbar = NodePath("../HUD/Hotbar")
-stats = SubResource("Resource_ov2xu")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory_gui", "player")]
 script = ExtResource("12_0pnie")
@@ -126,5 +121,10 @@ offset_right = -566.0
 offset_bottom = -23.999939
 scale = Vector2(2.2462473, 1.8793001)
 inventory_gui = NodePath("../InventoryGui")
+
+[node name="PlayerHPBar" parent="HUD" instance=ExtResource("12_mad0u")]
+scale = Vector2(5.639999, 4.200001)
+
+[node name="SkillsMenu" parent="HUD" instance=ExtResource("12_ocfjn")]
 
 [connection signal="drop_requested" from="HUD/InventoryGui" to="Player" method="_on_inventory_gui_drop_requested"]

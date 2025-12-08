@@ -1,10 +1,11 @@
-[gd_resource type="Resource" script_class="SkillSet" load_steps=4 format=3 uid="uid://by6spn5htmj3c"]
+[gd_resource type="Resource" script_class="SkillSet" load_steps=5 format=3 uid="uid://by6spn5htmj3c"]
 
 [ext_resource type="Script" uid="uid://68poicum82gv" path="res://systems/stats/skills/skill_set.gd" id="1_u464b"]
 [ext_resource type="Script" uid="uid://oq8i86lreywa" path="res://systems/stats/skills/skill.gd" id="2_ncny0"]
 [ext_resource type="Resource" uid="uid://qi75vpwgcorh" path="res://systems/stats/skills/created_skill/woodcutting.tres" id="3_ncny0"]
+[ext_resource type="Resource" uid="uid://bm06pph6pwbg0" path="res://systems/stats/skills/created_skill/slayer.tres" id="4_i0qf8"]
 
 [resource]
 script = ExtResource("1_u464b")
-skills = Array[ExtResource("2_ncny0")]([ExtResource("3_ncny0")])
+skills = Array[ExtResource("2_ncny0")]([ExtResource("3_ncny0"), ExtResource("4_i0qf8")])
 metadata/_custom_type_script = "uid://68poicum82gv"
