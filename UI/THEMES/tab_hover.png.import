@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lywtsq6unofj"
-path="res://.godot/imported/button_unchecked.png-fa98e153fe2038d091f94820b4cd38db.ctex"
+uid="uid://dk6r81ht1slnj"
+path="res://.godot/imported/tab_hover.png-6a2c64ba1100e18c4553d70e64af538d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://THEMES/button_unchecked.png"
-dest_files=["res://.godot/imported/button_unchecked.png-fa98e153fe2038d091f94820b4cd38db.ctex"]
+source_file="res://UI/THEMES/tab_hover.png"
+dest_files=["res://.godot/imported/tab_hover.png-6a2c64ba1100e18c4553d70e64af538d.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jvndhjjnefmb"
-path="res://.godot/imported/LifeBarMiniUnder.png-153177d09e40a134574a95144e0fce41.ctex"
+uid="uid://bpkbox43vd3xx"
+path="res://.godot/imported/tab_disabled.png-a028885e572864b15242e129b69bf7f5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://THEMES/LifeBarMiniUnder.png"
-dest_files=["res://.godot/imported/LifeBarMiniUnder.png-153177d09e40a134574a95144e0fce41.ctex"]
+source_file="res://UI/THEMES/tab_disabled.png"
+dest_files=["res://.godot/imported/tab_disabled.png-a028885e572864b15242e129b69bf7f5.ctex"]
 
 [params]
 

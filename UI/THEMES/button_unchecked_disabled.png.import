@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpkbox43vd3xx"
-path="res://.godot/imported/tab_disabled.png-03f4a06031aafb3e697b894cd4a7cfc0.ctex"
+uid="uid://b3mcgaogknseg"
+path="res://.godot/imported/button_unchecked_disabled.png-afc8a0775d38b8db7c0f7ab994fef1d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://THEMES/tab_disabled.png"
-dest_files=["res://.godot/imported/tab_disabled.png-03f4a06031aafb3e697b894cd4a7cfc0.ctex"]
+source_file="res://UI/THEMES/button_unchecked_disabled.png"
+dest_files=["res://.godot/imported/button_unchecked_disabled.png-afc8a0775d38b8db7c0f7ab994fef1d2.ctex"]
 
 [params]
 

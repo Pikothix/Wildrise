@@ -2,6 +2,7 @@ extends Control
 class_name StatsMenu
 
 @export var stats: Stats   # overridden at runtime
+@export var use_own_input: bool = true   # <- NEW
 
 @onready var stats_list: VBoxContainer = $Panel/MarginContainer/VBox/ScrollContainer/StatsList
 @onready var title_label: Label = $Panel/MarginContainer/VBox/TitleLabel
@@ -15,21 +16,20 @@ func _ready() -> void:
 	title_label.text = "Stats"
 	print("StatsMenu: _ready called")
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("open_stats"):
-		_toggle_menu()
-		get_viewport().set_input_as_handled()
 
-func _toggle_menu() -> void:
-	_is_open = not _is_open
-	visible = _is_open
+func set_open(open: bool) -> void:
+	_is_open = open
+	visible = open
 
 	if _is_open:
-		print("StatsMenu: opening, resolving Stats...")
+		print("StatsMenu: opening (from parent), resolving Stats...")
 		_ensure_stats()
 		_refresh_stats()
 	else:
-		print("StatsMenu: closing")
+		print("StatsMenu: closing (from parent)")
+
+
+
 
 func _ensure_stats() -> void:
 	# Prefer Player's Stats

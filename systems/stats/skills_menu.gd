@@ -2,6 +2,7 @@ extends Control
 class_name SkillsMenu
 
 @export var skill_set: SkillSet   # overridden at runtime
+@export var use_own_input: bool = true   # <- NEW
 
 @onready var skills_list: VBoxContainer = $Panel/MarginContainer/VBox/ScrollContainer/SkillList
 @onready var title_label: Label = $Panel/MarginContainer/VBox/TitleLabel
@@ -9,26 +10,28 @@ class_name SkillsMenu
 var _is_open: bool = false
 var _skills_connected: bool = false
 
+
 func _ready() -> void:
 	visible = false
 	title_label.text = "Skills"
 	print("SkillsMenu: _ready called")
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("open_skills"):
-		_toggle_menu()
-		get_viewport().set_input_as_handled()
 
-func _toggle_menu() -> void:
-	_is_open = not _is_open
-	visible = _is_open
+
+
+func set_open(open: bool) -> void:
+	_is_open = open
+	visible = open
 
 	if _is_open:
-		print("SkillsMenu: opening, resolving SkillSet...")
+		print("SkillsMenu: opening (from parent), resolving SkillSet...")
 		_ensure_skill_set()
 		_refresh_skills()
 	else:
-		print("SkillsMenu: closing")
+		print("SkillsMenu: closing (from parent)")
+
+
+
 
 func _ensure_skill_set() -> void:
 	# Prefer Player's SkillSet

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpaxpyeictja8"
-path="res://.godot/imported/button_checked.png-6a0e8f0e4285e83c071108fb0a97638b.ctex"
+uid="uid://cxlsjjhu1g7eb"
+path="res://.godot/imported/LifeBarMiniProgress.png-b20eb463ad4c0c4700110a2b1df0a814.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://THEMES/button_checked.png"
-dest_files=["res://.godot/imported/button_checked.png-6a0e8f0e4285e83c071108fb0a97638b.ctex"]
+source_file="res://UI/THEMES/LifeBarMiniProgress.png"
+dest_files=["res://.godot/imported/LifeBarMiniProgress.png-b20eb463ad4c0c4700110a2b1df0a814.ctex"]
 
 [params]
 

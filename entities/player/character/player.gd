@@ -4,12 +4,12 @@ extends CharacterBody2D
 
 @export var skill_set: SkillSet
 @export var inspect_radius: float = 64.0
-@export var inventory_gui: InventoryGui   
 @export var inventory: Inventory
 @export var hotbar: HotbarUI  
 
-@export var inspect_panel: NpcInspectPanel
+@export var character_menu: CharacterMenu
 
+@export var inspect_panel: NpcInspectPanel
 
 var last_move_dir: Vector2 = Vector2.DOWN
 
@@ -48,11 +48,44 @@ var slayer_buff: StatBuff = null
 
 
 func _input(event: InputEvent) -> void:
+	# ---------- UI FIRST: menu toggle + tab cycling ----------
+	if character_menu:
+		# Open/close whole menu (always starts on Inventory tab)
+		if event.is_action_pressed("toggle_inv"):
+			character_menu.toggle()
+			get_viewport().set_input_as_handled()
+			return
+
+		# Move to previous tab (left)
+		if event.is_action_pressed("char_tab_left"):
+			if character_menu.is_open():
+				character_menu.cycle_tab(-1)
+				get_viewport().set_input_as_handled()
+			return
+
+		# Move to next tab (right)
+		if event.is_action_pressed("char_tab_right"):
+			if character_menu.is_open():
+				character_menu.cycle_tab(1)
+				get_viewport().set_input_as_handled()
+			return
+
+	# If the menu is open, block the rest of the gameplay input (incl. hotbar)
+	if character_menu and character_menu.is_open():
+		return
+
+
+
+
+
+
+
 
 	# ---------------------------------------
 	# PREVENT HOTBAR-ONLY ACTIONS WHEN INVENTORY IS OPEN
 	# ---------------------------------------
-	var hotbar_blocked := (inventory_gui != null and inventory_gui.is_open)
+	var hotbar_blocked := (character_menu != null and character_menu.is_open())
+
 
 
 	if event.is_action_pressed("inspect"):
@@ -125,14 +158,6 @@ func _ready() -> void:
 
 	add_to_group("player")
 	ToolManager.tool_selected.connect(on_tool_selected)
-
-	# Find the InventoryGui in the scene tree
-	var inv_gui := get_tree().root.find_child("InventoryGui", true, false) as InventoryGui
-	if inv_gui:
-		inventory_gui = inv_gui
-		inv_gui.drop_requested.connect(on_inventory_drop_requested)
-	else:
-		push_warning("Player: could not find InventoryGui to connect drop_requested")
 
 	# After stats + skill_set are available, wire skills into stats via buffs
 	_setup_skill_stat_bonuses()
@@ -516,5 +541,4 @@ func _inspect_nearest_npc() -> void:
 		push_warning("Player: inspect_panel is not assigned")
 		return
 
-	# Let the panel decide whether to open, switch, or close
 	inspect_panel.set_target(nearest_npc)

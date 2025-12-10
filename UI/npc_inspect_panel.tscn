@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c8in6jg311tym"]
 
-[ext_resource type="Script" uid="uid://cgg33emd4rrog" path="res://npc_inspect_panel.gd" id="1_idxwb"]
-[ext_resource type="Texture2D" uid="uid://b5r3hqmbs000r" path="res://THEMES/nine_path_panel.png" id="2_ghtb4"]
+[ext_resource type="Script" uid="uid://cgg33emd4rrog" path="res://UI/npc_inspect_panel.gd" id="1_idxwb"]
+[ext_resource type="Texture2D" uid="uid://b5r3hqmbs000r" path="res://UI/THEMES/nine_path_panel.png" id="2_ghtb4"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_saaxq"]
 texture = ExtResource("2_ghtb4")
