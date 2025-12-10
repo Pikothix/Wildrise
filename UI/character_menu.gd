@@ -18,7 +18,7 @@ const TAB_SKILLS := 2
 func _ready() -> void:
 	visible = false
 
-	# --- IMPORTANT: give InventoryGui the player's Inventory ---
+	# --- Inventory wiring ---
 	if player and inventory_gui:
 		inventory_gui.set_inventory(player.inventory)
 		if not inventory_gui.drop_requested.is_connected(player.on_inventory_drop_requested):
@@ -26,16 +26,27 @@ func _ready() -> void:
 	else:
 		push_warning("CharacterMenu: player or inventory_gui not set – inventory will stay empty")
 
-	# Stats/Skills should not handle their own input anymore
+	# --- Stats / Skills wiring ---
+	if player:
+		if stats_menu and player.stats_component:
+			var s := player.stats_component.get_stats()
+			stats_menu.set_stats(s)
+
+		if skills_menu and player.skill_set:
+			skills_menu.set_skill_set(player.skill_set)
+
 	if stats_menu:
 		stats_menu.use_own_input = false
 	if skills_menu:
 		skills_menu.use_own_input = false
 
+	# --- Tabs setup ---
 	if tabs:
 		tabs.tab_changed.connect(_on_tab_changed)
 		tabs.current_tab = TAB_INVENTORY
 		_update_tab_states()
+
+
 
 
 # ---------- PUBLIC API (called from Player) ----------

@@ -48,31 +48,33 @@ var slayer_buff: StatBuff = null
 
 
 func _input(event: InputEvent) -> void:
-	# ---------- UI FIRST: menu toggle + tab cycling ----------
-	if character_menu:
-		# Open/close whole menu (always starts on Inventory tab)
-		if event.is_action_pressed("toggle_inv"):
+	# 1) Toggle menu
+	if event.is_action_pressed("open_character_menu"):
+		if character_menu:
 			character_menu.toggle()
+		get_viewport().set_input_as_handled()
+		return
+
+	# 2) If menu open, handle tab cycling and block everything else
+	if character_menu and character_menu.is_open():
+		if event.is_action_pressed("character_tab_left"):
+			character_menu.cycle_tab(-1)
 			get_viewport().set_input_as_handled()
 			return
 
-		# Move to previous tab (left)
-		if event.is_action_pressed("char_tab_left"):
-			if character_menu.is_open():
-				character_menu.cycle_tab(-1)
-				get_viewport().set_input_as_handled()
+		if event.is_action_pressed("character_tab_right"):
+			character_menu.cycle_tab(1)
+			get_viewport().set_input_as_handled()
 			return
 
-		# Move to next tab (right)
-		if event.is_action_pressed("char_tab_right"):
-			if character_menu.is_open():
-				character_menu.cycle_tab(1)
-				get_viewport().set_input_as_handled()
-			return
-
-	# If the menu is open, block the rest of the gameplay input (incl. hotbar)
-	if character_menu and character_menu.is_open():
+		# If some other key tries to sneak through, swallow it
+		get_viewport().set_input_as_handled()
 		return
+
+	# 3) Normal gameplay input continues below this point
+	# (movement, attacks, hotbar, etc.)
+
+
 
 
 
@@ -147,14 +149,13 @@ func _ready() -> void:
 	else:
 		push_warning("Player has NO Hurtbox node (HurtBox) as a child")
 
-	# --- Stats signals / setup, same as before ---
+	# --- Stats signals / setup ---
 	if stats:
-		stats.setup_stats()
-
 		var callable := Callable(self, "_on_health_depleted")
 		if not stats.is_connected("health_depleted", callable):
 			stats.health_depleted.connect(callable)
 			print("Player: connected health_depleted for Stats:", stats)
+
 
 	add_to_group("player")
 	ToolManager.tool_selected.connect(on_tool_selected)
@@ -298,7 +299,7 @@ func _respawn(respawn_position: Vector2) -> void:
 
 	# Reset stats to full health
 	if stats:
-		stats.setup_stats()
+		stats.current_health = stats.current_max_health
 
 	# Reset flags & visuals
 	is_dead = false
@@ -310,6 +311,7 @@ func _respawn(respawn_position: Vector2) -> void:
 	set_process(true)
 
 	print("PLAYER RESPAWNED at", respawn_position)
+
 
 
 

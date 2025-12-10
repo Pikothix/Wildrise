@@ -1,8 +1,8 @@
 extends Control
 class_name StatsMenu
 
-@export var stats: Stats   # overridden at runtime
-@export var use_own_input: bool = true   # <- NEW
+@export var stats: Stats   # can still be set in the inspector if you want
+@export var use_own_input: bool = true
 
 @onready var stats_list: VBoxContainer = $Panel/MarginContainer/VBox/ScrollContainer/StatsList
 @onready var title_label: Label = $Panel/MarginContainer/VBox/TitleLabel
@@ -22,31 +22,24 @@ func set_open(open: bool) -> void:
 	visible = open
 
 	if _is_open:
-		print("StatsMenu: opening (from parent), resolving Stats...")
-		_ensure_stats()
+		print("StatsMenu: opening (from parent)")
+		_connect_stats_signals()
 		_refresh_stats()
 	else:
 		print("StatsMenu: closing (from parent)")
 
 
-
-
-func _ensure_stats() -> void:
-	# Prefer Player's Stats
-	var player := get_tree().get_first_node_in_group("player") as Player
-	if player and player.stats:
-		if stats != player.stats:
-			print("StatsMenu: overriding exported Stats with Player's Stats:", player.stats)
-		stats = player.stats
-		_connect_stats_signals()     # NEW
+func set_stats(new_stats: Stats) -> void:
+	# Called by CharacterMenu / whoever owns this menu
+	if stats == new_stats:
 		return
 
-	# Fallback: use exported
-	if stats != null:
-		print("StatsMenu: using exported Stats:", stats)
-		_connect_stats_signals()     # NEW
-	else:
-		push_warning("StatsMenu: no Stats found (no Player and none exported)")
+	stats = new_stats
+	_stats_connected = false
+	_connect_stats_signals()
+
+	if _is_open:
+		_refresh_stats()
 
 
 func _refresh_stats() -> void:
@@ -85,6 +78,7 @@ func _refresh_stats() -> void:
 	stats_list.custom_minimum_size.y = stats_list.get_child_count() * row_height
 	print("StatsMenu: StatsList now has", stats_list.get_child_count(), "rows")
 
+
 func _add_stat_row(label_text: String, value_text: String) -> void:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -102,7 +96,6 @@ func _add_stat_row(label_text: String, value_text: String) -> void:
 	row.add_child(name_label)
 	row.add_child(value_label)
 	stats_list.add_child(row)
-
 
 
 func _connect_stats_signals() -> void:

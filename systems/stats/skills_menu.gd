@@ -1,8 +1,8 @@
 extends Control
 class_name SkillsMenu
 
-@export var skill_set: SkillSet   # overridden at runtime
-@export var use_own_input: bool = true   # <- NEW
+@export var skill_set: SkillSet   # can still be set in inspector
+@export var use_own_input: bool = true
 
 @onready var skills_list: VBoxContainer = $Panel/MarginContainer/VBox/ScrollContainer/SkillList
 @onready var title_label: Label = $Panel/MarginContainer/VBox/TitleLabel
@@ -17,38 +17,28 @@ func _ready() -> void:
 	print("SkillsMenu: _ready called")
 
 
-
-
 func set_open(open: bool) -> void:
 	_is_open = open
 	visible = open
 
 	if _is_open:
-		print("SkillsMenu: opening (from parent), resolving SkillSet...")
-		_ensure_skill_set()
+		print("SkillsMenu: opening (from parent)")
+		_connect_skill_signals()
 		_refresh_skills()
 	else:
 		print("SkillsMenu: closing (from parent)")
 
 
-
-
-func _ensure_skill_set() -> void:
-	# Prefer Player's SkillSet
-	var player := get_tree().get_first_node_in_group("player") as Player
-	if player and player.skill_set:
-		if skill_set != player.skill_set:
-			print("SkillsMenu: overriding exported SkillSet with Player's SkillSet:", player.skill_set)
-		skill_set = player.skill_set
-		_connect_skill_signals()   
+func set_skill_set(new_skill_set: SkillSet) -> void:
+	if skill_set == new_skill_set:
 		return
 
-	# Fallback: use exported
-	if skill_set != null:
-		print("SkillsMenu: using exported SkillSet:", skill_set)
-		_connect_skill_signals()    
-	else:
-		push_warning("SkillsMenu: no SkillSet found (no Player and none exported)")
+	skill_set = new_skill_set
+	_skills_connected = false
+	_connect_skill_signals()
+
+	if _is_open:
+		_refresh_skills()
 
 
 func _refresh_skills() -> void:
@@ -77,34 +67,27 @@ func _refresh_skills() -> void:
 		print("  skill[", i, "] name =", s.skill_name, "level =", s.level, "xp =", s.experience)
 		_add_skill_row(s)
 
-	# 🔹 Ensure the list actually has some height so ScrollContainer can show it
 	var row_height := 24.0
 	skills_list.custom_minimum_size.y = skills_list.get_child_count() * row_height
 	print("SkillsMenu: SkillList now has", skills_list.get_child_count(), "rows")
 
+
 func _add_skill_row(skill: Skill) -> void:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.custom_minimum_size.y = 24  # give it a visible height
+	row.custom_minimum_size.y = 24
 
 	var name_label := Label.new()
-	name_label.text = str(skill.skill_name).capitalize()
+	name_label.text = str(skill.skill_name)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	var level_label := Label.new()
-	level_label.text = "Lv %d" % skill.level
-	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	level_label.custom_minimum_size.x = 50
-
-	var xp_label := Label.new()
-	xp_label.text = "XP: %.1f" % skill.experience
-	xp_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	xp_label.custom_minimum_size.x = 100
+	var value_label := Label.new()
+	value_label.text = "Lv %d (%.1f XP)" % [skill.level, skill.experience]
+	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	value_label.custom_minimum_size.x = 160
 
 	row.add_child(name_label)
-	row.add_child(level_label)
-	row.add_child(xp_label)
-
+	row.add_child(value_label)
 	skills_list.add_child(row)
 
 
@@ -113,15 +96,18 @@ func _connect_skill_signals() -> void:
 		return
 
 	for s in skill_set.skills:
-		if not s.level_up.is_connected(_on_skill_changed):
-			s.level_up.connect(_on_skill_changed)
-		if not s.experience_changed.is_connected(_on_skill_changed):
-			s.experience_changed.connect(_on_skill_changed)
+		if not s.level_up.is_connected(_on_skill_level_up.bind(s)):
+			s.level_up.connect(_on_skill_level_up.bind(s))
+		if not s.experience_changed.is_connected(_on_skill_xp_changed.bind(s)):
+			s.experience_changed.connect(_on_skill_xp_changed.bind(s))
 
 	_skills_connected = true
 
 
-func _on_skill_changed(_value) -> void:
-	# Called when any skill gains XP or levels up
+func _on_skill_level_up(_new_level: int, _skill: Skill) -> void:
+	if _is_open:
+		_refresh_skills()
+
+func _on_skill_xp_changed(_new_xp: float, _skill: Skill) -> void:
 	if _is_open:
 		_refresh_skills()
