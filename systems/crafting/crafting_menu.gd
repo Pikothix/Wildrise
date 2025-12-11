@@ -252,3 +252,34 @@ func _consume_ingredients_from_grid(recipe: CraftingRecipe) -> bool:
 			return false
 
 	return true
+
+
+func take_from_slot(slot_ui: InventorySlotUI, one_only: bool) -> InventorySlot:
+	var idx := grid_slot_uis.find(slot_ui)
+	if idx == -1:
+		return null
+
+	var slot_res := grid_slots[idx]
+	if slot_res.item == null or slot_res.amount <= 0:
+		return null
+
+	var amount := slot_res.amount
+	if one_only:
+		amount = 1
+
+	var taken := InventorySlot.new()
+	taken.item = slot_res.item
+	taken.amount = amount
+
+	slot_res.amount -= amount
+	if slot_res.amount <= 0:
+		slot_res.clear()
+
+	grid_stacks[idx].update()
+	_update_output()
+	return taken
+
+
+
+func get_grid_slots() -> Array[InventorySlotUI]:
+	return grid_slot_uis

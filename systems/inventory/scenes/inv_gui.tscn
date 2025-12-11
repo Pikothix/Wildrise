@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5wra7g07oy5d"]
+[gd_scene load_steps=7 format=3 uid="uid://c5wra7g07oy5d"]
 
 [ext_resource type="Texture2D" uid="uid://djgco3t67wyp1" path="res://systems/inventory/assets/InventoryRect.png" id="1_elobm"]
 [ext_resource type="Script" uid="uid://cwdtyy0lawqpw" path="res://systems/inventory/scripts/inv_gui.gd" id="1_q4jct"]
 [ext_resource type="Resource" uid="uid://bpbi3t7ocesqa" path="res://systems/inventory/player_inventory.tres" id="2_a4cf7"]
 [ext_resource type="PackedScene" uid="uid://ba61nesbqk0ia" path="res://systems/inventory/scenes/inv_slot.tscn" id="2_q4jct"]
 [ext_resource type="Texture2D" uid="uid://tg87fcatoabl" path="res://systems/inventory/assets/hotbar_selector.png" id="4_5rcyk"]
+[ext_resource type="PackedScene" uid="uid://ms4c0nkjv3p3" path="res://systems/crafting/crafting_menu.tscn" id="5_bq7r3"]
 
 [node name="InventoryGui" type="Control" groups=["inv_gui"]]
 layout_mode = 3
@@ -38,10 +39,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -59.5
-offset_top = 6.0
-offset_right = 60.5
-offset_bottom = 28.0
+offset_left = -60.5
+offset_top = 64.0
+offset_right = 59.5
+offset_bottom = 86.0
 grow_horizontal = 2
 
 [node name="Slot" parent="Panel/HotbarContainer" instance=ExtResource("2_q4jct")]
@@ -59,47 +60,62 @@ layout_mode = 2
 [node name="Slot5" parent="Panel/HotbarContainer" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="InventoryGrid" type="GridContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -59.5
-offset_top = 41.0
-offset_right = 60.5
-offset_bottom = 86.0
-grow_horizontal = 2
+[node name="MainBox" type="HBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 126.0
+offset_bottom = 50.0
+
+[node name="InventoryGrid" type="GridContainer" parent="Panel/MainBox"]
+layout_mode = 2
 columns = 5
 
-[node name="Slot6" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot6" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot9" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot9" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot7" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot7" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot8" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot8" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot10" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot10" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot11" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot11" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot12" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot12" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot13" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot13" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot14" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot14" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
 
-[node name="Slot15" parent="Panel/InventoryGrid" instance=ExtResource("2_q4jct")]
+[node name="Slot15" parent="Panel/MainBox/InventoryGrid" instance=ExtResource("2_q4jct")]
 layout_mode = 2
+
+[node name="CraftingRoot" type="Control" parent="Panel/MainBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CraftingMenu" parent="Panel/MainBox/CraftingRoot" instance=ExtResource("5_bq7r3")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 8.0
+offset_top = -1.0
+offset_right = 8.0
+offset_bottom = 43.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="Selector" type="TextureRect" parent="Panel"]
 custom_minimum_size = Vector2(20, 20)

@@ -8,11 +8,12 @@ var using_mouse: bool = true
 
 
 @export var inventory: Inventory
+@export var crafting_menu: CraftingMenu
 
 @onready var item_stack_scene: PackedScene = preload("res://systems/inventory/scenes/inv_items_stack.tscn")
 
 @onready var hotbar_container: HBoxContainer = $Panel/HotbarContainer
-@onready var grid_container: GridContainer = $Panel/InventoryGrid
+@onready var grid_container: GridContainer = $Panel/MainBox/InventoryGrid
 @onready var selector: Control = $Panel/Selector
 
 var hotbar_slots: Array = []
@@ -20,6 +21,17 @@ var grid_slots: Array = []
 var slots: Array = []
 
 const COLUMNS: int = 5
+
+# Crafting navigation support
+const REGION_INVENTORY := 0
+const REGION_CRAFTING := 1
+
+var current_region: int = REGION_INVENTORY
+
+var crafting_slots: Array[InventorySlotUI] = []
+const CRAFT_COLUMNS: int = 2
+var craft_rows: int = 0
+
 
 var item_in_hand: ItemStack = null
 var old_index: int = -1
@@ -40,13 +52,40 @@ func _ready():
 
 	hotbar_slots = hotbar_container.get_children()
 	grid_slots = grid_container.get_children()
-	slots = hotbar_slots + grid_slots
+
+	slots.clear()
+
+	# 🔹 VISUAL ORDER: inventory rows first, then hotbar row
+	slots.append_array(grid_slots)
+	slots.append_array(hotbar_slots)
+
+	# 🔹 Map slot.index → inventory index
+	# Assuming inventory layout: [0..hotbar_size-1] = hotbar, then backpack
+	var inv_index := 0
+
+	# First hotbar indices 0..hotbar_slots.size()-1
+	for h in hotbar_slots:
+		h.index = inv_index
+		inv_index += 1
+
+	# Then grid indices hotbar_slots.size()..(hotbar+grid-1)
+	for g in grid_slots:
+		g.index = inv_index
+		inv_index += 1
 
 	connect_slots()
 
 	rows = int(ceil(float(slots.size()) / float(COLUMNS)))
 	close()  # start closed
 	_update_selector_position()
+
+	if selector:
+		selector.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	if crafting_menu:
+		call_deferred("init_crafting_slots")
 
 
 func set_inventory(new_inventory: Inventory) -> void:
@@ -64,7 +103,9 @@ func set_inventory(new_inventory: Inventory) -> void:
 func open() -> void:
 	visible = true
 	is_open = true
+	current_region = REGION_INVENTORY
 	_update_selector_position()
+
 
 
 func close() -> void:
@@ -87,9 +128,13 @@ func refresh_slots() -> void:
 	if inventory == null:
 		return
 
-	for i in range(min(inventory.slots.size(), slots.size())):
-		var inv_slot: InventorySlot = inventory.slots[i]
-		var ui_slot: InventorySlotUI = slots[i]
+	for ui_slot: InventorySlotUI in slots:
+		var inv_idx := ui_slot.index
+		if inv_idx < 0 or inv_idx >= inventory.slots.size():
+			ui_slot.clear()
+			continue
+
+		var inv_slot: InventorySlot = inventory.slots[inv_idx]
 
 		if inv_slot.item == null:
 			ui_slot.clear()
@@ -104,6 +149,7 @@ func refresh_slots() -> void:
 		ui_stack.update()
 
 	_update_selector_position()
+
 
 
 
@@ -206,9 +252,19 @@ func put_item_back() -> void:
 		var empty := slots.filter(func (s): return s.is_empty_slot())
 		if empty.is_empty():
 			return
-		old_index = empty[0].index
+		old_index = empty[0].index  # this is an inventory index
 
-	var target_slot: InventorySlotUI = slots[old_index]
+	# Find the UI slot that corresponds to this inventory index
+	var target_slot: InventorySlotUI = null
+	for s: InventorySlotUI in slots:
+		if s.index == old_index:
+			target_slot = s
+			break
+
+	if target_slot == null:
+		locked = false
+		return
+
 	var tween := create_tween()
 	var pos := target_slot.global_position + target_slot.size / 2
 
@@ -217,6 +273,7 @@ func put_item_back() -> void:
 
 	insert_item_in_slot(target_slot)
 	locked = false
+
 
 
 func update_item_in_hand() -> void:
@@ -243,42 +300,104 @@ func update_item_in_hand() -> void:
 # ----------------------
 
 func _update_selector_position() -> void:
-	if slots.is_empty():
-		return
+	if current_region == REGION_INVENTORY:
+		if slots.is_empty():
+			return
+		selected_index = clamp(selected_index, 0, slots.size() - 1)
+		var slot: Control = slots[selected_index]
+		selector.global_position = slot.global_position + slot.size / 2 - selector.size / 2
+	else:
+		if crafting_slots.is_empty():
+			return
+		selected_index = clamp(selected_index, 0, crafting_slots.size() - 1)
+		var cslot: Control = crafting_slots[selected_index]
+		selector.global_position = cslot.global_position + cslot.size / 2 - selector.size / 2
 
-	selected_index = clamp(selected_index, 0, slots.size() - 1)
-
-	var slot: Control = slots[selected_index]
-	# Center selector over the slot
-	selector.global_position = slot.global_position + slot.size / 2 - selector.size / 2
 
 
 func _move_selection(dx: int, dy: int) -> void:
-	if slots.is_empty():
-		return
+	if current_region == REGION_INVENTORY:
+		if slots.is_empty():
+			return
 
-	var row: int = selected_index / COLUMNS
-	var col: int = selected_index % COLUMNS
+		var row: int = selected_index / COLUMNS
+		var col: int = selected_index % COLUMNS
 
-	row += dy
-	col += dx
+		row += dy
+		col += dx
 
-	row = clamp(row, 0, rows - 1)
-	col = clamp(col, 0, COLUMNS - 1)
+		row = clamp(row, 0, rows - 1)
+		col = clamp(col, 0, COLUMNS - 1)
 
-	var new_index: int = row * COLUMNS + col
-	if new_index >= slots.size():
-		return
+		var new_index: int = row * COLUMNS + col
+		if new_index >= slots.size():
+			return
 
-	selected_index = new_index
+		selected_index = new_index
+	else:
+		if crafting_slots.is_empty():
+			return
+
+		var row: int = selected_index / CRAFT_COLUMNS
+		var col: int = selected_index % CRAFT_COLUMNS
+
+		row += dy
+		col += dx
+
+		row = clamp(row, 0, craft_rows - 1)
+		col = clamp(col, 0, CRAFT_COLUMNS - 1)
+
+		var new_index: int = row * CRAFT_COLUMNS + col
+		if new_index >= crafting_slots.size():
+			return
+
+		selected_index = new_index
+
 	_update_selector_position()
 
 
 func _controller_select_current_slot() -> void:
+	if current_region == REGION_INVENTORY:
+		if selected_index < 0 or selected_index >= slots.size():
+			return
+		var ui_slot: InventorySlotUI = slots[selected_index]
+		on_slot_clicked(ui_slot)
+	else:
+		# For now, no direct per-slot interaction in crafting grid.
+		# Craft / Clear buttons are used instead.
+		return
+
+
+
+func _move_selected_to_crafting(one_only: bool) -> void:
+	if crafting_menu == null:
+		return
+	if inventory == null:
+		return
+	if current_region != REGION_INVENTORY:
+		return
 	if selected_index < 0 or selected_index >= slots.size():
 		return
+
 	var ui_slot: InventorySlotUI = slots[selected_index]
-	on_slot_clicked(ui_slot)
+	var inv_idx := ui_slot.index
+	if inv_idx < 0 or inv_idx >= inventory.slots.size():
+		return
+
+	var slot: InventorySlot = inventory.slots[inv_idx]
+	if slot == null or slot.item == null or slot.amount <= 0:
+		return
+
+	var amount_to_move := slot.amount
+	if one_only:
+		amount_to_move = 1
+
+	var accepted := crafting_menu.add_ingredient(slot.item, amount_to_move)
+	if not accepted:
+		return
+
+	inventory.take_from_index(inv_idx, amount_to_move)
+
 
 
 func _input(event: InputEvent) -> void:
@@ -327,9 +446,26 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("inv_select"):
 		_controller_select_current_slot()
 
+	# Switch selector between inventory and crafting grids
+	if event.is_action_pressed("inv_toggle_region"):
+		_toggle_region()
+
 	# Drop from the currently selected slot
 	if event.is_action_pressed("inv_drop"):
 		drop_current_slot()
+
+	# Send items to crafting grid or back, depending on region
+	if event.is_action_pressed("inv_to_craft_one"):
+		if current_region == REGION_INVENTORY:
+			_move_selected_to_crafting(true)
+		else:
+			_move_selected_from_crafting_to_inventory(true)
+
+	if event.is_action_pressed("inv_to_craft_stack"):
+		if current_region == REGION_INVENTORY:
+			_move_selected_to_crafting(false)
+		else:
+			_move_selected_from_crafting_to_inventory(false)
 
 	update_item_in_hand()
 
@@ -340,4 +476,52 @@ func drop_current_slot() -> void:
 	if selected_index < 0 or selected_index >= slots.size():
 		return
 
-	emit_signal("drop_requested", selected_index)
+	var ui_slot: InventorySlotUI = slots[selected_index]
+	emit_signal("drop_requested", ui_slot.index)
+
+
+
+func init_crafting_slots() -> void:
+	if crafting_menu == null:
+		return
+
+	crafting_slots = crafting_menu.get_grid_slots()
+	if crafting_slots.is_empty():
+		return
+
+	craft_rows = int(ceil(float(crafting_slots.size()) / float(CRAFT_COLUMNS)))
+
+
+func _toggle_region() -> void:
+	if crafting_slots.is_empty():
+		return
+
+	if current_region == REGION_INVENTORY:
+		current_region = REGION_CRAFTING
+		selected_index = clamp(selected_index, 0, crafting_slots.size() - 1)
+	else:
+		current_region = REGION_INVENTORY
+		selected_index = clamp(selected_index, 0, slots.size() - 1)
+
+	_update_selector_position()
+
+
+func _move_selected_from_crafting_to_inventory(one_only: bool) -> void:
+	if crafting_menu == null:
+		return
+	if inventory == null:
+		return
+	if current_region != REGION_CRAFTING:
+		return
+	if selected_index < 0 or selected_index >= crafting_slots.size():
+		return
+
+	var ui_slot: InventorySlotUI = crafting_slots[selected_index]
+	var taken_slot: InventorySlot = crafting_menu.take_from_slot(ui_slot, one_only)
+	if taken_slot == null:
+		return
+
+	# Try to insert into inventory; if it fails, put it back in crafting
+	if not inventory.insert(taken_slot.item, taken_slot.amount):
+		# inventory full → push it back to crafting
+		crafting_menu.add_ingredient(taken_slot.item, taken_slot.amount)

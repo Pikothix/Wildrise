@@ -12,6 +12,7 @@ var slots: Array[HotbarSlot] = []
 var currently_selected: int = 0   # column within the row (0..4)
 var active_row: int = 0           # which inventory row is being used as hotbar (0..N-1)
 
+var blocked: bool = false
 
 func _ready() -> void:
 	# Build a strongly-typed slots array from the container children
@@ -28,6 +29,9 @@ func _ready() -> void:
 
 	if not slots.is_empty():
 		selector.global_position = slots[currently_selected].global_position
+
+func set_blocked(value: bool) -> void:
+	blocked = value
 
 
 func _get_row_count() -> int:
@@ -81,6 +85,9 @@ func cycle_row(offset: int = 1) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if blocked:
+		return
+		
 	# Block hotbar movement when inventory is open
 	if inventory_gui != null and inventory_gui.is_open:
 		return

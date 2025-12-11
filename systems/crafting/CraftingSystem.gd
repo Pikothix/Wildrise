@@ -58,3 +58,4 @@ static func craft(
 			print("CraftingSystem: not enough space to insert crafted item", res.item.name, "x", res.amount)
 
 	return true
+	

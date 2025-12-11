@@ -47,27 +47,16 @@ var slayer_buff: StatBuff = null
 @export var slayer_attack_per_level: float = 0.5  # Attack gained per Slayer level
 @export var test_recipe: CraftingRecipe
 
-
-
-
-
-
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("test"):
-		if CraftingSystem.can_craft(inventory, test_recipe, current_tool, skill_set):
-			print("Can craft:", test_recipe.recipe_name)
-			CraftingSystem.craft(inventory, test_recipe, current_tool, skill_set)
-		else:
-			print("Cannot craft:", test_recipe.recipe_name)	
-	# 1) Toggle menu
-	if event.is_action_pressed("open_character_menu"):
-		if character_menu:
-			character_menu.toggle()
-		get_viewport().set_input_as_handled()
-		return
-
-	# 2) If menu open, handle tab cycling and block everything else
 	if character_menu and character_menu.is_open():
+
+		# Allow closing the menu again!
+		if event.is_action_pressed("open_character_menu"):
+			character_menu.toggle()
+			get_viewport().set_input_as_handled()
+			return
+
+		# Handle tab cycling while menu is open
 		if event.is_action_pressed("character_tab_left"):
 			character_menu.cycle_tab(-1)
 			get_viewport().set_input_as_handled()
@@ -78,20 +67,28 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 
-		# If some other key tries to sneak through, swallow it
-		get_viewport().set_input_as_handled()
+		# Menu is open → swallow gameplay input, but UI still gets mouse/keyboard
 		return
 
-	# 3) Normal gameplay input continues below this point
-	# (movement, attacks, hotbar, etc.)
 
 
 
 
 
+	# 1) Test crafting (only when menu closed)
+	if event.is_action_pressed("test"):
+		if CraftingSystem.can_craft(inventory, test_recipe, current_tool, skill_set):
+			print("Can craft:", test_recipe.recipe_name)
+			CraftingSystem.craft(inventory, test_recipe, current_tool, skill_set)
+		else:
+			print("Cannot craft:", test_recipe.recipe_name)
 
-
-
+	# 2) Toggle menu
+	if event.is_action_pressed("open_character_menu"):
+		if character_menu:
+			character_menu.toggle()
+		get_viewport().set_input_as_handled()
+		return
 
 
 	# ---------------------------------------
@@ -124,7 +121,6 @@ func _input(event: InputEvent) -> void:
 		hitbox.instigator = self
 		hitbox.global_position = global_position
 
-		# I prefer adding to the main scene, but you can keep it under the player if you want
 		get_tree().current_scene.add_child(hitbox)
 
 

@@ -7,7 +7,8 @@ class_name CharacterMenu
 @onready var inventory_gui: InventoryGui = $MarginContainer/VBox/Tabs/Inventory/InventoryGui
 @onready var stats_menu: StatsMenu       = $MarginContainer/VBox/Tabs/StatsMenu
 @onready var skills_menu: SkillsMenu     = $MarginContainer/VBox/Tabs/SkillsMenu
-@onready var crafting_menu: CraftingMenu = $Panel/MarginContainer/VBox/Tabs/CraftingTab/CraftingMenu
+@onready var crafting_menu: CraftingMenu = $MarginContainer/VBox/Tabs/Inventory/InventoryGui/Panel/MainBox/CraftingRoot/CraftingMenu
+
 
 
 var _is_open: bool = false
@@ -15,15 +16,21 @@ var _is_open: bool = false
 const TAB_INVENTORY := 0
 const TAB_STATS := 1
 const TAB_SKILLS := 2
-const TAB_CRAFTING := 3
 
 
 func _ready() -> void:
+	# Don't block mouse input; let buttons/slots inside handle it
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
 
 	# --- Inventory wiring ---
 	if player and inventory_gui:
 		inventory_gui.set_inventory(player.inventory)
+		inventory_gui.crafting_menu = crafting_menu
+		inventory_gui.init_crafting_slots() 
 		if not inventory_gui.drop_requested.is_connected(player.on_inventory_drop_requested):
 			inventory_gui.drop_requested.connect(player.on_inventory_drop_requested)
 	else:
@@ -43,16 +50,17 @@ func _ready() -> void:
 	if skills_menu:
 		skills_menu.use_own_input = false
 
+
+	# --- Crafting context ---
+	if player and crafting_menu:
+		crafting_menu.set_context(player.inventory, player.skill_set, player.current_tool)
+
+
 	# --- Tabs setup ---
 	if tabs:
 		tabs.tab_changed.connect(_on_tab_changed)
 		tabs.current_tab = TAB_INVENTORY
 		_update_tab_states()
-
-	if player and crafting_menu:
-		crafting_menu.set_context(player.inventory, player.skill_set, player.current_tool)
-		# optionally assign some starting recipes:
-		# crafting_menu.known_recipes = [recipe_axe, recipe_plank, ...]
 
 
 
@@ -103,10 +111,15 @@ func _set_open(open: bool) -> void:
 	_is_open = open
 	visible = open
 
+	# Freeze/unfreeze hotbar input
+	if player and player.hotbar:
+		player.hotbar.set_blocked(open)
+
 	if not tabs:
 		return
 
 	_update_tab_states()
+
 
 
 func _set_tab(tab_index: int) -> void:
