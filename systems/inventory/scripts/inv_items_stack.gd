@@ -5,20 +5,30 @@ class_name ItemStack
 @onready var amount_label: Label = $Label
 
 var _inventory_slot: InventorySlot
+var _is_ready: bool = false
+
 
 var inventory_slot: InventorySlot:
 	get:
 		return _inventory_slot
 	set(value):
 		_inventory_slot = value
-		_refresh()
+		_refresh()  # safe now because _refresh() will early-return if not ready
 
 
 func _ready() -> void:
+	_is_ready = true
+	print("ItemStack init: ", item_sprite, amount_label)
 	_refresh()
 
 
 func _refresh() -> void:
+	# If nodes aren't ready yet, bail out.
+	if not _is_ready:
+		return
+	if item_sprite == null or amount_label == null:
+		return
+
 	var slot := _inventory_slot
 
 	# No slot or no item → hide and bail

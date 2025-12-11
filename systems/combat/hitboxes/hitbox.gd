@@ -8,6 +8,9 @@ class_name Hitbox
 var attacker_stats: Stats
 var instigator: Node = null   # whoever spawned this hitbox
 
+const DamageCalculator := preload("res://systems/combat/damage/damage_calculator.gd")
+
+
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 
@@ -32,6 +35,7 @@ func _ready() -> void:
 	set_collision_mask_value(1, true)
 
 
+
 func _on_area_entered(area: Area2D) -> void:
 	if not (area is Hurtbox):
 		return
@@ -39,7 +43,17 @@ func _on_area_entered(area: Area2D) -> void:
 	var hb := area as Hurtbox
 	var owner_node := hb.get_parent()
 
-	# 🔹 Don't hit our own owner (prevents self-damage)
+	# --- 1) Hard self-protection: don't hit our own owner node ---
+	if instigator != null and owner_node == instigator:
+		return
+
+	# --- 2) Faction-based friendly-fire protection ---
+	if attacker_stats != null and hb.owner_stats != null:
+		if attacker_stats.faction == hb.owner_stats.faction:
+			# Same faction → no damage (prevents enemy vs enemy, player vs player, etc.)
+			return
+
+	# --- 3) Legacy self-check (kept as extra safety) ---
 	if attacker_stats != null and hb.owner_stats == attacker_stats:
 		return
 
@@ -50,11 +64,5 @@ func _on_area_entered(area: Area2D) -> void:
 
 	if dmg <= 0:
 		return
-
-	#print("Hitbox from", instigator, 
-		#"hit Hurtbox node", hb.name, 
-		#"parent:", owner_node, 
-		#"owner_stats:", hb.owner_stats, 
-		#"for", dmg, "damage")
 
 	hb.receive_hit(dmg, self)

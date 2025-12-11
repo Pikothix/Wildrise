@@ -70,12 +70,13 @@ func on_hurt(raw_damage: int, from: Area2D) -> void:
 		await get_tree().create_timer(0.25).timeout
 		material.set_shader_parameter("shake_intensity", 0.0)
 
+# Called when this breakable hits max damage (tree "dies")
 func on_max_damaged_reached() -> void:
-	_reward_skill_xp()
+	_reward_harvest_xp()
 	call_deferred("drop_loot")
 	queue_free()
 
-func _reward_skill_xp() -> void:
+func _reward_harvest_xp() -> void:
 	if harvest_stats == null:
 		return
 	if harvest_stats.skill_reward_xp <= 0.0:

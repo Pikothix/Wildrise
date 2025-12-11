@@ -3,7 +3,7 @@
 [ext_resource type="FontFile" uid="uid://cc1c1kpm0jtb4" path="res://systems/inventory/fonts/zx_palm.ttf" id="1_iglxs"]
 [ext_resource type="Script" uid="uid://bjea28tfugflv" path="res://systems/inventory/scripts/inv_items_stack.gd" id="1_l2kpq"]
 
-[node name="Panel" type="Panel"]
+[node name="ItemStack" type="Panel"]
 script = ExtResource("1_l2kpq")
 
 [node name="item" type="Sprite2D" parent="."]

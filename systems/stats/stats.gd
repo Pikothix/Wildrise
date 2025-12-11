@@ -75,10 +75,6 @@ var current_health: float:
 	set(value):
 		_set_current_health(value)
 
-func _init() -> void:
-	# Initial setup AFTER curves/values exist
-	setup_stats.call_deferred()
-
 
 func take_damage(amount: int) -> void:
 	if amount <= 0:

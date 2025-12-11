@@ -83,7 +83,6 @@ func toggle() -> void:
 
 
 
-# renamed from `update()` to avoid clashing with Control.update()
 func refresh_slots() -> void:
 	if inventory == null:
 		return

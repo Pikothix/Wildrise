@@ -1,0 +1,76 @@
+[gd_scene load_steps=5 format=3 uid="uid://ms4c0nkjv3p3"]
+
+[ext_resource type="Script" uid="uid://dowe12e6ub1pe" path="res://systems/crafting/crafting_menu.gd" id="1_ho3dp"]
+[ext_resource type="PackedScene" uid="uid://ba61nesbqk0ia" path="res://systems/inventory/scenes/inv_slot.tscn" id="2_4u0rw"]
+[ext_resource type="Script" uid="uid://0irqxjvchkkl" path="res://systems/crafting/CraftingRecipe.gd" id="2_rr5xf"]
+[ext_resource type="Resource" uid="uid://gvipm0hrqlyq" path="res://systems/crafting/craft_axe.tres" id="3_n5dtg"]
+
+[node name="CraftingMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ho3dp")
+known_recipes = Array[ExtResource("2_rr5xf")]([ExtResource("3_n5dtg")])
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 88.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 6.000002
+offset_right = 111.0
+offset_bottom = 82.0
+scale = Vector2(0.88531977, 0.8726982)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Crafting"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="GridSlot0" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/Grid" instance=ExtResource("2_4u0rw")]
+layout_mode = 2
+
+[node name="GridSlot1" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/Grid" instance=ExtResource("2_4u0rw")]
+layout_mode = 2
+
+[node name="GridSlot2" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/Grid" instance=ExtResource("2_4u0rw")]
+layout_mode = 2
+
+[node name="GridSlot3" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/Grid" instance=ExtResource("2_4u0rw")]
+layout_mode = 2
+
+[node name="ResultBox" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/ResultBox"]
+layout_mode = 2
+text = "Result"
+
+[node name="OutputSlot" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/ResultBox" instance=ExtResource("2_4u0rw")]
+layout_mode = 2
+
+[node name="ButtonsBox" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CraftButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsBox"]
+layout_mode = 2
+text = "Craft"
+
+[node name="ClearButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsBox"]
+layout_mode = 2
+text = "Clear"

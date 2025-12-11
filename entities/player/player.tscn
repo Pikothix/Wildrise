@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://bkfqm4yqkvtah"]
+[gd_scene load_steps=49 format=3 uid="uid://bkfqm4yqkvtah"]
 
 [ext_resource type="Script" uid="uid://b5v0pbg1k1rvi" path="res://entities/player/character/player.gd" id="1_y4r1p"]
 [ext_resource type="Resource" uid="uid://bpbi3t7ocesqa" path="res://systems/inventory/player_inventory.tres" id="2_3v2ag"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://buso4u1xdj8j6" path="res://components/collectable/collectable_component.tscn" id="3_f1ej7"]
 [ext_resource type="Shader" uid="uid://3hh31o6y8q4j" path="res://shaders/silhouette.gdshader" id="4_jej6c"]
 [ext_resource type="Script" uid="uid://bj4prj5dymjf0" path="res://entities/player/character/camera_2d.gd" id="5_f1ej7"]
+[ext_resource type="Resource" uid="uid://gvipm0hrqlyq" path="res://systems/crafting/craft_axe.tres" id="6_3wlsy"]
 [ext_resource type="Script" uid="uid://b52ax5bpdrjk2" path="res://scripts/state machine/templates/node_state_machine.gd" id="6_oprun"]
 [ext_resource type="PackedScene" uid="uid://bugxvty5gvjng" path="res://systems/combat/hitboxes/Hitbox.tscn" id="6_yqrof"]
 [ext_resource type="Script" uid="uid://dh7cpl6o18w83" path="res://entities/player/state_machine/idle.gd" id="7_a8ls1"]
@@ -276,7 +277,7 @@ node_connections = [&"output", 0, &"StateMachine"]
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yqrof"]
 size = Vector2(12, 13.5)
 
-[sub_resource type="Resource" id="Resource_yqrof"]
+[sub_resource type="Resource" id="Resource_b2kln"]
 resource_local_to_scene = true
 script = ExtResource("18_b2kln")
 metadata/_custom_type_script = "uid://bri7cbbtioqux"
@@ -292,6 +293,7 @@ inventory = ExtResource("2_3v2ag")
 drop_collectable_scene = ExtResource("3_f1ej7")
 stats_component = NodePath("StatsComponent")
 hitbox_scene = ExtResource("6_yqrof")
+test_recipe = ExtResource("6_3wlsy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 1
@@ -356,4 +358,4 @@ position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_yqrof")
 
 [node name="StatsComponent" parent="." instance=ExtResource("17_we0b7")]
-stats = SubResource("Resource_yqrof")
+stats = SubResource("Resource_b2kln")

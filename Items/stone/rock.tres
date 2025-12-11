@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=4 format=3 uid="uid://dhhjtb1c746nf"]
+
+[ext_resource type="Script" uid="uid://dqg63q63ll8cq" path="res://systems/inventory/scripts/Inv_Item.gd" id="1_mw61k"]
+[ext_resource type="Texture2D" uid="uid://8wj5r8b8uqvo" path="res://Items/stone/Rock.png" id="2_qmo0d"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i6706"]
+atlas = ExtResource("2_qmo0d")
+
+[resource]
+script = ExtResource("1_mw61k")
+name = "rock"
+texture = SubResource("AtlasTexture_i6706")
+metadata/_custom_type_script = "uid://dqg63q63ll8cq"

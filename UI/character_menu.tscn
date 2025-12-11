@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://ba8xiw4345660"]
+[gd_scene load_steps=6 format=3 uid="uid://ba8xiw4345660"]
 
 [ext_resource type="Script" uid="uid://7tv1pakbltm1" path="res://UI/character_menu.gd" id="1_6tlbt"]
 [ext_resource type="PackedScene" uid="uid://cy0hudn5cqupe" path="res://systems/stats/stats_menu.tscn" id="2_5thor"]
 [ext_resource type="PackedScene" uid="uid://c5wra7g07oy5d" path="res://systems/inventory/scenes/inv_gui.tscn" id="2_rhfay"]
 [ext_resource type="PackedScene" uid="uid://b5f1vjd5sjx45" path="res://systems/stats/skills_menu.tscn" id="3_rhfay"]
+[ext_resource type="PackedScene" uid="uid://ms4c0nkjv3p3" path="res://systems/crafting/crafting_menu.tscn" id="5_tkc3l"]
 
 [node name="CharacterMenu" type="Control"]
 layout_mode = 3
@@ -29,10 +30,11 @@ layout_mode = 2
 
 [node name="Tabs" type="TabContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
-current_tab = 0
+current_tab = 3
 clip_tabs = false
 
 [node name="Inventory" type="Control" parent="MarginContainer/VBox/Tabs"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -41,9 +43,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -116.15128
+offset_left = -200.02792
 offset_top = 79.32048
-offset_right = -128.15128
+offset_right = -212.02792
 offset_bottom = 79.32048
 grow_horizontal = 2
 grow_vertical = 2
@@ -60,3 +62,14 @@ visible = false
 layout_mode = 2
 use_own_input = false
 metadata/_tab_index = 2
+
+[node name="Crafting" type="Control" parent="MarginContainer/VBox/Tabs"]
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="CraftingMenu" parent="MarginContainer/VBox/Tabs/Crafting" instance=ExtResource("5_tkc3l")]
+layout_mode = 1
+offset_left = -3.978876
+offset_top = -3.5404978
+offset_right = -3.9788818
+offset_bottom = -3.5404978

@@ -193,3 +193,52 @@ func take_from_index(index: int, amount: int) -> int:
 
 	print("TAKE: after → slot.amount", slot.amount, "to_take", to_take)
 	return to_take
+
+
+# Returns how many of this item the player has in total.
+func get_total_amount(item: InventoryItem) -> int:
+	if item == null:
+		return 0
+
+	var total := 0
+	for slot: InventorySlot in slots:
+		if slot.item == item:
+			total += slot.amount
+	return total
+
+
+# Returns true if the inventory contains at least `amount` of `item`.
+func has_item_amount(item: InventoryItem, amount: int) -> bool:
+	if item == null or amount <= 0:
+		return false
+
+	return get_total_amount(item) >= amount
+
+
+# Remove up to `amount` of `item` from the inventory.
+# Returns how many were actually removed.
+func remove_item(item: InventoryItem, amount: int) -> int:
+	if item == null or amount <= 0:
+		return 0
+
+	var remaining := amount
+	for slot: InventorySlot in slots:
+		if slot.item != item:
+			continue
+
+		var to_take = min(slot.amount, remaining)
+		slot.amount -= to_take
+		remaining -= to_take
+
+		if slot.amount <= 0:
+			slot.clear()
+
+		if remaining <= 0:
+			updated.emit()
+			return amount  # removed everything requested
+
+	# If we get here, we ran out of stacks.
+	var removed := amount - remaining
+	if removed > 0:
+		updated.emit()
+	return removed

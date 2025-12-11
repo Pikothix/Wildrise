@@ -7,12 +7,15 @@ class_name CharacterMenu
 @onready var inventory_gui: InventoryGui = $MarginContainer/VBox/Tabs/Inventory/InventoryGui
 @onready var stats_menu: StatsMenu       = $MarginContainer/VBox/Tabs/StatsMenu
 @onready var skills_menu: SkillsMenu     = $MarginContainer/VBox/Tabs/SkillsMenu
+@onready var crafting_menu: CraftingMenu = $Panel/MarginContainer/VBox/Tabs/CraftingTab/CraftingMenu
+
 
 var _is_open: bool = false
 
 const TAB_INVENTORY := 0
 const TAB_STATS := 1
 const TAB_SKILLS := 2
+const TAB_CRAFTING := 3
 
 
 func _ready() -> void:
@@ -45,6 +48,12 @@ func _ready() -> void:
 		tabs.tab_changed.connect(_on_tab_changed)
 		tabs.current_tab = TAB_INVENTORY
 		_update_tab_states()
+
+	if player and crafting_menu:
+		crafting_menu.set_context(player.inventory, player.skill_set, player.current_tool)
+		# optionally assign some starting recipes:
+		# crafting_menu.known_recipes = [recipe_axe, recipe_plank, ...]
+
 
 
 
@@ -113,20 +122,22 @@ func _set_tab(tab_index: int) -> void:
 
 
 func _update_tab_states() -> void:
-	# Inventory tab
+	var current := tabs.current_tab if tabs else TAB_INVENTORY
+
 	if inventory_gui:
-		if _is_open and tabs.current_tab == TAB_INVENTORY:
+		if _is_open and current == TAB_INVENTORY:
 			inventory_gui.open()
 		else:
 			inventory_gui.close()
 
-	# Stats tab
 	if stats_menu:
-		stats_menu.set_open(_is_open and tabs.current_tab == TAB_STATS)
+		stats_menu.set_open(_is_open and current == TAB_STATS)
 
-	# Skills tab
 	if skills_menu:
-		skills_menu.set_open(_is_open and tabs.current_tab == TAB_SKILLS)
+		skills_menu.set_open(_is_open and current == TAB_SKILLS)
+
+
+
 
 
 func _on_tab_changed(_tab_index: int) -> void:

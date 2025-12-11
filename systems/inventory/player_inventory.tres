@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="Inventory" load_steps=20 format=3 uid="uid://bpbi3t7ocesqa"]
+[gd_resource type="Resource" script_class="Inventory" load_steps=21 format=3 uid="uid://bpbi3t7ocesqa"]
 
 [ext_resource type="Script" uid="uid://bwpfivxwc1ur2" path="res://systems/inventory/scripts/inv.gd" id="1_k4fmo"]
 [ext_resource type="Script" uid="uid://coiaxhjt600vq" path="res://systems/inventory/scripts/inv_slot.gd" id="2_2h30n"]
 [ext_resource type="Resource" uid="uid://yvlypr7uuaoq" path="res://Items/tool/axe/axe.tres" id="3_2h30n"]
 [ext_resource type="Resource" uid="uid://dwhkklo4c7mxd" path="res://Items/resource/log/log.tres" id="3_n8vad"]
+[ext_resource type="Resource" uid="uid://dhhjtb1c746nf" path="res://Items/stone/rock.tres" id="3_nr1ay"]
 
 [sub_resource type="Resource" id="Resource_n8vad"]
 script = ExtResource("2_2h30n")
+item = ExtResource("3_nr1ay")
+amount = 9
 metadata/_custom_type_script = "uid://coiaxhjt600vq"
 
 [sub_resource type="Resource" id="Resource_kem6u"]

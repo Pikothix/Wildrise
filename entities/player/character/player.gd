@@ -45,9 +45,20 @@ var vitality_buff: StatBuff = null
 
 var slayer_buff: StatBuff = null
 @export var slayer_attack_per_level: float = 0.5  # Attack gained per Slayer level
+@export var test_recipe: CraftingRecipe
+
+
+
+
 
 
 func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("test"):
+		if CraftingSystem.can_craft(inventory, test_recipe, current_tool, skill_set):
+			print("Can craft:", test_recipe.recipe_name)
+			CraftingSystem.craft(inventory, test_recipe, current_tool, skill_set)
+		else:
+			print("Cannot craft:", test_recipe.recipe_name)	
 	# 1) Toggle menu
 	if event.is_action_pressed("open_character_menu"):
 		if character_menu:
@@ -329,13 +340,24 @@ func update_current_tool_from_inventory_item(item: InventoryItem) -> void:
 		current_tool = DataTypes.Tools.None
 		equipped_tool = DataTypes.Tools.None
 		equipped_damage = 0
-
-		#print("Player: cleared tool")
 		return
 
 	current_tool = item.tool_type
 	equipped_tool = item.tool_type
-	equipped_damage = max(1, item.chop_power)
+
+	var base_attack := stats.current_attack if stats != null else 1.0
+	var bonus := 0
+
+	match item.category:
+		InventoryItem.ItemCategory.WEAPON:
+			bonus = item.damage
+		InventoryItem.ItemCategory.TOOL:
+			bonus = item.chop_power
+		_:
+			bonus = 0
+
+	equipped_damage = max(1, int(round(base_attack + bonus)))
+
 
 	#print("Player: equipped item", item.name, 
 		#"tool =", current_tool, 

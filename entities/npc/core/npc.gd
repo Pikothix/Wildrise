@@ -123,22 +123,10 @@ func _on_health_depleted() -> void:
 		return
 	is_dead = true
 
-	# Reward XP to the player that killed this enemy
 	if _last_attacker is Player:
-		var player: Player = _last_attacker
+		_reward_killer(_last_attacker)
 
-		if death_rewards:
-			# Skill XP (slayer, woodcutting, etc.)
-			if player.skill_set:
-				for skill_reward in death_rewards.skill_rewards:
-					if skill_reward.xp_amount > 0.0 and skill_reward.skill_name != &"":
-						player.skill_set.add_experience(
-							skill_reward.skill_name,
-							skill_reward.xp_amount
-						)
-
-
-
+	# Death anim / cleanup stays the same
 	if state_machine:
 		state_machine.transition_to("Death")
 	else:
@@ -160,6 +148,18 @@ func _on_health_depleted() -> void:
 		else:
 			queue_free()
 
+func _reward_killer(player: Player) -> void:
+	if death_rewards == null:
+		return
+	if player.skill_set == null:
+		return
+
+	for skill_reward in death_rewards.skill_rewards:
+		if skill_reward.xp_amount > 0.0 and skill_reward.skill_name != &"":
+			player.skill_set.add_experience(
+				skill_reward.skill_name,
+				skill_reward.xp_amount
+			)
 
 func update_facing_from_vector(dir: Vector2) -> void:
 	# Only care about horizontal direction
