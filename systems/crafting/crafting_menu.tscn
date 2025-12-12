@@ -22,8 +22,8 @@ offset_bottom = 88.0
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 6.000002
+offset_left = 7.0000014
+offset_top = 6.0000005
 offset_right = 111.0
 offset_bottom = 82.0
 scale = Vector2(0.88531977, 0.8726982)
@@ -59,18 +59,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/ResultBox"]
 layout_mode = 2
-text = "Result"
+text = "Output"
 
 [node name="OutputSlot" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/ResultBox" instance=ExtResource("2_4u0rw")]
 layout_mode = 2
-
-[node name="ButtonsBox" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="CraftButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsBox"]
-layout_mode = 2
-text = "Craft"
-
-[node name="ClearButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonsBox"]
-layout_mode = 2
-text = "Clear"

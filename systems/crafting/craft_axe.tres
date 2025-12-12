@@ -1,21 +1,11 @@
-[gd_resource type="Resource" script_class="CraftingRecipe" load_steps=9 format=3 uid="uid://gvipm0hrqlyq"]
+[gd_resource type="Resource" script_class="CraftingRecipe" load_steps=8 format=3 uid="uid://gvipm0hrqlyq"]
 
 [ext_resource type="Script" uid="uid://cg8em2yhyqoqi" path="res://systems/crafting/CraftingIngredient.gd" id="1_4j0cs"]
 [ext_resource type="Script" uid="uid://0irqxjvchkkl" path="res://systems/crafting/CraftingRecipe.gd" id="1_kpgge"]
 [ext_resource type="Resource" uid="uid://dwhkklo4c7mxd" path="res://Items/resource/log/log.tres" id="2_kwf75"]
 [ext_resource type="Resource" uid="uid://dhhjtb1c746nf" path="res://Items/stone/rock.tres" id="3_yofqd"]
+[ext_resource type="Script" uid="uid://dqg63q63ll8cq" path="res://systems/inventory/scripts/Inv_Item.gd" id="4_0ssnu"]
 [ext_resource type="Resource" uid="uid://yvlypr7uuaoq" path="res://Items/tool/axe/axe.tres" id="4_yofqd"]
-
-[sub_resource type="Resource" id="Resource_0ssnu"]
-script = ExtResource("1_4j0cs")
-item = ExtResource("2_kwf75")
-metadata/_custom_type_script = "uid://cg8em2yhyqoqi"
-
-[sub_resource type="Resource" id="Resource_a1pw3"]
-script = ExtResource("1_4j0cs")
-item = ExtResource("3_yofqd")
-amount = 3
-metadata/_custom_type_script = "uid://cg8em2yhyqoqi"
 
 [sub_resource type="Resource" id="Resource_46ltj"]
 script = ExtResource("1_4j0cs")
@@ -24,8 +14,7 @@ metadata/_custom_type_script = "uid://cg8em2yhyqoqi"
 
 [resource]
 script = ExtResource("1_kpgge")
-recipe_name = "axe"
-description = "Basic Axe"
-ingredients = Array[ExtResource("1_4j0cs")]([SubResource("Resource_0ssnu"), SubResource("Resource_a1pw3")])
 results = Array[ExtResource("1_4j0cs")]([SubResource("Resource_46ltj")])
+shaped = true
+pattern = Array[ExtResource("4_0ssnu")]([ExtResource("2_kwf75"), ExtResource("3_yofqd"), ExtResource("3_yofqd"), ExtResource("3_yofqd")])
 metadata/_custom_type_script = "uid://0irqxjvchkkl"
